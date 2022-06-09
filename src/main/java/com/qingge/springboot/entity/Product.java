@@ -26,7 +26,7 @@ public class Product implements Serializable {
       @TableId(value = "product_id", type = IdType.AUTO)
       private Integer productId;
 
-    private byte[] name;
+    private String name;
 
     private Double price;
 
@@ -34,7 +34,7 @@ public class Product implements Serializable {
       private Double size;
 
       @ApiModelProperty("img转二进制存")
-      private byte[] img;
+      private String img;
 
       @ApiModelProperty("库存数量")
       private Integer stockNum;
@@ -52,10 +52,10 @@ public class Product implements Serializable {
       private Integer isDelete;
 
       @ApiModelProperty("交易方式")
-      private byte[] dealStyle;
+      private String dealStyle;
 
       @ApiModelProperty("好评率")
-      private byte[] favorableRate;
+      private String favorableRate;
 
       @ApiModelProperty("是否上架在售")
       private Integer isEnable;
