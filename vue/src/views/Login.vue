@@ -55,7 +55,7 @@ export default {
               if (res.data.role === 'ROLE_STUDENT') {
                 this.$router.push("/front/home")
               } else {
-                this.$router.push("/")
+                this.$router.push("/home")
               }
             } else {
               this.$message.error(res.msg)
