@@ -1,5 +1,6 @@
 package com.qingge.springboot.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IProductService extends IService<Product> {
 
+    Page<Product> findPage(Page<Product> objectPage, String name);
 }

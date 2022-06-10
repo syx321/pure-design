@@ -30,18 +30,21 @@ public class ProductController {
     private IProductService productService;
 
     // 新增或者更新
+    @AuthAccess
     @PostMapping
     public Result save(@RequestBody Product product) {
         productService.saveOrUpdate(product);
         return Result.success();
     }
 
+    @AuthAccess
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         productService.removeById(id);
         return Result.success();
     }
 
+    @AuthAccess
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
         productService.removeByIds(ids);
@@ -54,17 +57,20 @@ public class ProductController {
         return Result.success(productService.list());
     }
 
+    @AuthAccess
     @GetMapping("/{id}")
     public Result findOne(@PathVariable Integer id) {
         return Result.success(productService.getById(id));
     }
 
+    @AuthAccess
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
-        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(productService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username) {
+        System.out.println(pageNum);
+        System.out.println(username);
+        return Result.success(productService.findPage(new Page<>(pageNum, pageSize), username));
     }
 
 }
