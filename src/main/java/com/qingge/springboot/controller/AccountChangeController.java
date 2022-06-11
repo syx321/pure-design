@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountChangeController {
 
     @Resource
-    AccountChangeMapper accountChangeMapper;
+    private AccountChangeMapper accountChangeMapper;
 
     @Resource
     private IAccountChangeService accountChangeService;
@@ -75,10 +75,9 @@ public class AccountChangeController {
 
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
-        QueryWrapper<AccountChange> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(accountChangeService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                           @RequestParam Integer pageSize,
+                           @RequestParam Integer userId) {
+        return Result.success(accountChangeService.findPage(new Page<>(pageNum, pageSize), userId.toString()));
     }
 
 }

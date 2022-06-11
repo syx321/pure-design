@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingge.springboot.mapper.AccountChangeMapper">
+    <resultMap id="pageAccount" type="com.qingge.springboot.entity.AccountChange">
+        <result column="user_id" property="userId" />
+        <result column="recharge_record" property="rechargeRecord" />
+        <result column="consume_record" property="consumeRecord" />
+        <result column="income_record" property="incomeRecord" />
+        <result column="time" property="time" />
+    </resultMap>
 
+    <select id="findPage" resultMap="pageAccount">
+        select * from account_change
+        <where>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
+            </if>
+        </where>
+    </select>
 </mapper>
