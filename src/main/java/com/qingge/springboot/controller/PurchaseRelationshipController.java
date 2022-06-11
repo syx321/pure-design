@@ -4,7 +4,10 @@ package com.qingge.springboot.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.ReceiveState;
+import com.qingge.springboot.config.AuthAccess;
+import com.qingge.springboot.entity.AccountChange;
 import com.qingge.springboot.entity.Files;
+import com.qingge.springboot.mapper.AccountChangeMapper;
 import com.qingge.springboot.mapper.PurchaseRelationshipMapper;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -28,8 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/purchase-relationship")
 public class PurchaseRelationshipController {
-
-    PurchaseRelationshipMapper purchaseRelationshipMapper;
     @Resource
     private IPurchaseRelationshipService purchaseRelationshipService;
 
@@ -46,20 +47,16 @@ public class PurchaseRelationshipController {
         return Result.success();
     }
 
-    // 确认收货 订单完成
+    // 订单完成
+    @AuthAccess
     @GetMapping("/receive/{id}")
     public Result receive(@PathVariable Integer id) {
-        PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectById(id);
-        purchaseRelationship.setDeliverState(ReceiveState.FINISHED.toString());
-        purchaseRelationship.setIsCart(0);
-        purchaseRelationship.setReceivedTime(System.currentTimeMillis());
-        return Result.success(purchaseRelationshipMapper.updateById(purchaseRelationship));
+        return purchaseRelationshipService.receive(id);
     }
 
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
-        purchaseRelationshipService.removeByIds(ids);
-        return Result.success();
+        return Result.success(purchaseRelationshipService.removeByIds(ids));
     }
 
     @GetMapping
