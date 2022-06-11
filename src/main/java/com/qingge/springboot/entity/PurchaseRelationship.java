@@ -2,7 +2,6 @@ package com.qingge.springboot.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -40,7 +39,7 @@ public class PurchaseRelationship implements Serializable {
       private String deliverState;
 
       @ApiModelProperty("拿时间戳算收货时长")
-      private LocalDateTime receivedTime;
+      private Long receivedTime;
 
       @ApiModelProperty("本次交易评分")
       private Integer score;

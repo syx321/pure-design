@@ -2,6 +2,10 @@ package com.qingge.springboot.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.common.Constants;
+import com.qingge.springboot.common.ReceiveState;
+import com.qingge.springboot.entity.Files;
+import com.qingge.springboot.mapper.PurchaseRelationshipMapper;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/purchase-relationship")
 public class PurchaseRelationshipController {
 
+    PurchaseRelationshipMapper purchaseRelationshipMapper;
     @Resource
     private IPurchaseRelationshipService purchaseRelationshipService;
 
@@ -39,6 +44,16 @@ public class PurchaseRelationshipController {
     public Result delete(@PathVariable Integer id) {
         purchaseRelationshipService.removeById(id);
         return Result.success();
+    }
+
+    // 确认收货 订单完成
+    @GetMapping("/receive/{id}")
+    public Result receive(@PathVariable Integer id) {
+        PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectById(id);
+        purchaseRelationship.setDeliverState(ReceiveState.FINISHED.toString());
+        purchaseRelationship.setIsCart(0);
+        purchaseRelationship.setReceivedTime(System.currentTimeMillis());
+        return Result.success(purchaseRelationshipMapper.updateById(purchaseRelationship));
     }
 
     @PostMapping("/del/batch")
