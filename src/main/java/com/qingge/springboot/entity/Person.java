@@ -1,8 +1,11 @@
 package com.qingge.springboot.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -18,7 +21,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-  @ApiModel(value = "Person对象", description = "")
+@ApiModel(value = "Person对象", description = "")
+@TableName("person")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,7 +53,7 @@ public class Person implements Serializable {
       private String license;
 
       @ApiModelProperty("register_checked")
-      private Integer registerChecked;
+      private boolean registerChecked;
 
       @ApiModelProperty("image转二进制")
       private String avatar;

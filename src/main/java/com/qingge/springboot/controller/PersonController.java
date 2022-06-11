@@ -1,7 +1,12 @@
 package com.qingge.springboot.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.common.Constants;
+import com.qingge.springboot.config.AuthAccess;
+import com.qingge.springboot.controller.dto.PersonDTO;
+import com.qingge.springboot.controller.dto.UserDTO;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,16 +29,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/person")
 public class PersonController {
-
     @Resource
     private IPersonService personService;
 
-    // 新增或者更新
-    @PostMapping
-    public Result save(@RequestBody Person person) {
-        personService.saveOrUpdate(person);
-        return Result.success();
+
+    //用户注册接口 ： 普通用户、商家
+    @AuthAccess
+    @PostMapping("/register")
+    public Result register(@RequestBody PersonDTO personDTO) {
+        String username = personDTO.getUsername();
+        String password = personDTO.getPassword();
+        if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+            return Result.error(Constants.CODE_400, "参数错误");
+        }
+        return Result.success(personService.register(personDTO));
     }
+
+
+    //    // 新增或者更新
+//    @PostMapping
+//    public Result save(@RequestBody Person person) {
+//        personService.saveOrUpdate(person);
+//        return Result.success();
+//    }
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {

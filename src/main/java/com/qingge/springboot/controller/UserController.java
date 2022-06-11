@@ -54,7 +54,7 @@ public class UserController {
         UserDTO dto = userService.login(userDTO);
         return Result.success(dto);
     }
-
+    //用户注册接口 ： 普通用户、商家
     @PostMapping("/register")
     public Result register(@RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
@@ -64,6 +64,7 @@ public class UserController {
         }
         return Result.success(userService.register(userDTO));
     }
+
 
     // 新增或者更新
     @PostMapping
