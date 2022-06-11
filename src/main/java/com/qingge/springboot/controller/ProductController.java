@@ -30,40 +30,34 @@ public class ProductController {
     private IProductService productService;
 
     // 新增或者更新
-    @AuthAccess
     @PostMapping
     public Result save(@RequestBody Product product) {
         productService.saveOrUpdate(product);
         return Result.success();
     }
 
-    @AuthAccess
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         productService.removeById(id);
         return Result.success();
     }
 
-    @AuthAccess
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
         productService.removeByIds(ids);
         return Result.success();
     }
 
-    @AuthAccess
     @GetMapping
     public Result findAll() {
         return Result.success(productService.list());
     }
 
-    @AuthAccess
     @GetMapping("/{id}")
     public Result findOne(@PathVariable Integer id) {
         return Result.success(productService.getById(id));
     }
 
-    @AuthAccess
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
