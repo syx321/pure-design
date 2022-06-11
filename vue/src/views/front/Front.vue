@@ -30,10 +30,10 @@
 
         <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal" router>
           <el-menu-item index="/front/home">首页</el-menu-item>
-          <el-menu-item index="/front/video">我的评价</el-menu-item>
-          <el-menu-item index="/front/article">卖家评价</el-menu-item>
-          <el-menu-item index="/front/article">我的订单</el-menu-item>
-          <el-menu-item index="/front/article">购物车</el-menu-item>
+          <el-menu-item index="/front/MyEvaluate">我的评价</el-menu-item>
+          <el-menu-item index="/front/SellerEvaluate">卖家评价</el-menu-item>
+          <el-menu-item index="/front/MyOrder">我的订单</el-menu-item>
+          <el-menu-item index="/front/Cart">购物车</el-menu-item>
         </el-menu>
       </div>
       <div style="width: 200px">
