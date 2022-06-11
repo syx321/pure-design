@@ -23,9 +23,14 @@ public class PurchaseRelationship implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("订单id")
+    private Integer orderId;
+
     private Integer userId;
 
     private Integer productId;
+
+    private Integer businessId;
 
     private String userEvaluate;
 

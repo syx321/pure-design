@@ -68,8 +68,6 @@ public class ProductController {
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
                            @RequestParam(defaultValue = "") String username) {
-        System.out.println(pageNum);
-        System.out.println(username);
         return Result.success(productService.findPage(new Page<>(pageNum, pageSize), username));
     }
 
