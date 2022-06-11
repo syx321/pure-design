@@ -55,5 +55,8 @@ public class PurchaseRelationship implements Serializable {
       @ApiModelProperty("是否在购物车")
       private Integer isCart;
 
+      @ApiModelProperty("订单创建时间")
+      private Long createTime;
+
 
 }

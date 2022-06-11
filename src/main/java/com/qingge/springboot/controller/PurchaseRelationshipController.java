@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/purchase-relationship")
 public class PurchaseRelationshipController {
+
+    @Resource
+    private PurchaseRelationshipMapper purchaseRelationshipMapper;
     @Resource
     private IPurchaseRelationshipService purchaseRelationshipService;
 
@@ -57,6 +60,16 @@ public class PurchaseRelationshipController {
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
         return Result.success(purchaseRelationshipService.removeByIds(ids));
+    }
+
+    // 找到所有我的订单
+    @AuthAccess
+    @GetMapping("/findMyOrder/{id}")
+    public Result findMyOrder(@PathVariable Integer id) {
+        QueryWrapper<PurchaseRelationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", id);
+        List<PurchaseRelationship> purchaseRelationshipList = purchaseRelationshipMapper.selectList(queryWrapper);
+        return Result.success(purchaseRelationshipList);
     }
 
     @GetMapping
