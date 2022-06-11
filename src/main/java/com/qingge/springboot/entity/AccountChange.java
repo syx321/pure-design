@@ -34,5 +34,8 @@ public class AccountChange implements Serializable {
       @ApiModelProperty("货款到账")
       private Double incomeRecord;
 
+      @ApiModelProperty("记录时间")
+      private Long time;
+
 
 }

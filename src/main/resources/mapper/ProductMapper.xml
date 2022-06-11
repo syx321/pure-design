@@ -2,4 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingge.springboot.mapper.ProductMapper">
 
+    <resultMap id="pageProduct" type="com.qingge.springboot.entity.Product">
+        <result column="product_id" property="productId" />
+        <result column="name" property="name" />
+        <result column="price" property="price" />
+        <result column="size" property="size" />
+        <result column="img" property="img" />
+        <result column="stock_num" property="stockNum" />
+        <result column="history_sale_num" property="historySaleNum" />
+        <result column="purchase_num" property="purchaseNum" />
+        <result column="score" property="score" />
+        <result column="is_delete" property="isDelete" />
+        <result column="deal_style" property="dealStyle" />
+        <result column="favorable_rate" property="favorableRate" />
+        <result column="is_enable" property="isEnable" />
+        <result column="is_checked" property="isChecked" />
+        <result column="is_enable" property="isEnable" />
+    </resultMap>
+
+    <select id="findPage" resultMap="pageProduct">
+        select * from product where name like concat('%', #{name} ,'%')
+<!--        <where>-->
+<!--            <if test="name != null and name != ''">-->
+<!--                -->
+<!--            </if>-->
+<!--        </where>-->
+    </select>
 </mapper>

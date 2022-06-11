@@ -19,6 +19,8 @@ bin/
 *.iml
 *.ipr
 *.lock
+*.yml
+*.class
 rebel.xml
 
 ### NetBeans ###

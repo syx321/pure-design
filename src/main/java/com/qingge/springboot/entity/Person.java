@@ -64,7 +64,7 @@ public class Person implements Serializable {
       private String shoppingPoints;
 
       @ApiModelProperty("账户余额")
-      private String balance;
+      private double balance;
 
       @ApiModelProperty("卖家等级")
       private Integer level;

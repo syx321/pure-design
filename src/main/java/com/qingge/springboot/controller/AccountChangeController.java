@@ -2,6 +2,9 @@ package com.qingge.springboot.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.config.AuthAccess;
+import com.qingge.springboot.entity.Files;
+import com.qingge.springboot.mapper.AccountChangeMapper;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,6 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountChangeController {
 
     @Resource
+    AccountChangeMapper accountChangeMapper;
+
+    @Resource
     private IAccountChangeService accountChangeService;
 
     // 新增或者更新
@@ -45,6 +51,16 @@ public class AccountChangeController {
     public Result deleteBatch(@RequestBody List<Integer> ids) {
         accountChangeService.removeByIds(ids);
         return Result.success();
+    }
+
+    //充值记录
+    @AuthAccess
+    @GetMapping("/rechargeRecord/{id}")
+    public Result rechargeRecord(@PathVariable Integer id) {
+        QueryWrapper<AccountChange> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", id);
+        List<AccountChange> accountChangeList = accountChangeMapper.selectList(queryWrapper);
+        return Result.success(accountChangeList);
     }
 
     @GetMapping

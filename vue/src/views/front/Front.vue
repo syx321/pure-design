@@ -6,7 +6,7 @@
         <div style="width: 60px">
           <img src="../../assets/logo1.png" alt="" style="width: 50px; position: relative; top: 5px; right: 0">
         </div>
-        <div style="flex: 1">欢迎来到xx系统</div>
+        <div style="flex: 1">二手交易平台</div>
       </div>
       <div style="flex: 1">
 <!--        导航菜单-->
@@ -30,22 +30,10 @@
 
         <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal" router>
           <el-menu-item index="/front/home">首页</el-menu-item>
-          <el-menu-item index="/front/video">视频播放</el-menu-item>
-          <el-menu-item index="/front/article">文章列表</el-menu-item>
-          <el-submenu index="2">
-            <template slot="title">我的工作台</template>
-            <el-menu-item index="/front/item1">选项1</el-menu-item>
-            <el-menu-item index="2-2">选项2</el-menu-item>
-            <el-menu-item index="2-3">选项3</el-menu-item>
-            <el-submenu index="2-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="2-4-1">选项1</el-menu-item>
-              <el-menu-item index="2-4-2">选项2</el-menu-item>
-              <el-menu-item index="2-4-3">选项3</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item index="3" disabled>消息中心</el-menu-item>
-          <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+          <el-menu-item index="/front/MyEvaluate">我的评价</el-menu-item>
+          <el-menu-item index="/front/SellerEvaluate">卖家评价</el-menu-item>
+          <el-menu-item index="/front/MyOrder">我的订单</el-menu-item>
+          <el-menu-item index="/front/Cart">购物车</el-menu-item>
         </el-menu>
       </div>
       <div style="width: 200px">
@@ -68,7 +56,13 @@
                 <router-link to="/front/person">个人信息</router-link>
               </el-dropdown-item>
               <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-                <span style="text-decoration: none" @click="logout">退出</span>
+                <router-link to="/front/person">充值记录</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item style="font-size: 14px; padding: 5px 0">
+                <router-link to="/front/person">支付记录</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item style="font-size: 14px; padding: 5px 0">
+                <span style="text-decoration: none" @click="logout">退出登录</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

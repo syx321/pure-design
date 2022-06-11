@@ -48,7 +48,13 @@ public class ProductController {
         return Result.success();
     }
 
-    @AuthAccess
+    @GetMapping("/purchase")
+    public Result purchase(@RequestParam Integer productId,
+                           @RequestParam Integer userId,
+                           @RequestParam Integer count) {
+        return productService.purchase(productId, userId, count);
+    }
+
     @GetMapping
     public Result findAll() {
         return Result.success(productService.list());
@@ -61,10 +67,9 @@ public class ProductController {
 
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
-        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(productService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username) {
+        return Result.success(productService.findPage(new Page<>(pageNum, pageSize), username));
     }
 
 }

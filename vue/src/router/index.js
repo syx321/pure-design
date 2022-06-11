@@ -65,6 +65,24 @@ const routes = [
         name: 'ArticleDetail',
         component: () => import('../views/front/ArticleDetail')
       },
+      {
+        path: 'cart',
+        name: 'Cart',
+        component: () => import('../views/front/TopNavi/Cart')
+      },
+      {
+        path: 'myEvaluate',
+        name: 'MyEvaluate',
+        component: () => import('../views/front/TopNavi/MyEvaluate')
+      },{
+        path: 'myOrder',
+        name: 'MyOrder',
+        component: () => import('../views/front/TopNavi/MyOrder')
+      },{
+        path: 'sellerEvaluate',
+        name: 'SellerEvaluate',
+        component: () => import('../views/front/TopNavi/SellerEvaluate')
+      },
     ]
   },
 ]
