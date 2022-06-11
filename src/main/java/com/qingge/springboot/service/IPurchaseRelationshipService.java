@@ -14,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPurchaseRelationshipService extends IService<PurchaseRelationship> {
     Result receive(Integer id);
+    Boolean createOrder(PurchaseRelationship purchaseRelationship);
 }

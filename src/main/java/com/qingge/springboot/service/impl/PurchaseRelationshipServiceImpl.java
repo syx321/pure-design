@@ -50,4 +50,9 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
 
         return Result.success();
     }
+
+    @Override
+    public Boolean createOrder(PurchaseRelationship purchaseRelationship) {
+        return save(purchaseRelationship);
+    }
 }

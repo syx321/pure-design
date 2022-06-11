@@ -48,6 +48,13 @@ public class ProductController {
         return Result.success();
     }
 
+    @GetMapping("/purchase")
+    public Result purchase(@RequestParam Integer productId,
+                           @RequestParam Integer userId,
+                           @RequestParam Integer count) {
+        return productService.purchase(productId, userId, count);
+    }
+
     @GetMapping
     public Result findAll() {
         return Result.success(productService.list());

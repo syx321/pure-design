@@ -26,6 +26,8 @@ public class Product implements Serializable {
       @TableId(value = "product_id", type = IdType.AUTO)
       private Integer productId;
 
+      private Integer businessId;
+
     private String name;
 
     private Double price;
