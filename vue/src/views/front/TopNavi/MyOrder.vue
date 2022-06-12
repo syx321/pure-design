@@ -3,17 +3,39 @@
     <div style="margin: 10px 0">
       <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="name"></el-input>
       <el-button class="ml-5" @click="load">搜索</el-button>
+      <el-button class="ml-5" @click="reset">重置</el-button>
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'">
-<!--      <el-table-column> <img :src="item" alt="" style="width: 100%"> </el-table-column>-->
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="flag" label="唯一标识"></el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column label="操作"  width="220" align="center">
+      <el-table-column prop="orderId" label="订单号" width="60"></el-table-column>
+      <el-table-column label="商品图片"  width="150" style="height: 150px" align="center">
         <template slot-scope="scope">
-          <el-button type="info" v-if="scope.row.deliverState === 'FINISHED'" @click="selectMenu(scope.row)">评价 <i class="el-icon-edit"></i></el-button>
-          <el-button type="success" @click="confirmReceive(scope.row)">确认收货</el-button>
+          <img :src="scope.row.img" alt="" style="width: 100%">
+        </template>
+      </el-table-column>
+      <el-table-column prop="name" label="名称"></el-table-column>
+      <el-table-column prop="price" label="单价"></el-table-column>
+      <el-table-column prop="dealStyle" label="交易方式"></el-table-column>
+      <el-table-column label="交易状态">
+        <template slot-scope="scope">
+          <el-tag type="warning" v-if="scope.row.deliverState === 'FINISHED'">已完成</el-tag>
+          <el-tag type="primary" v-else>已发货</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="订单创建时间" :formatter="formatterTime"></el-table-column>
+      <el-table-column prop="receivedTime" label="收货时间" :formatter="formatterTime"></el-table-column>
+      <el-table-column prop="count" label="数量" width="45"></el-table-column>
+      <el-table-column label="总价">
+        <template slot-scope="scope">
+          <span style="font-size: 16px">{{scope.row.count * scope.row.price}}¥</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="userEvaluate" label="我的评价"></el-table-column>
+      <el-table-column label="操作" width="100" align="center">
+        <template slot-scope="scope">
+          <el-button type="info" v-if="scope.row.userEvaluate" disabled>已评价</el-button>
+          <el-button type="info" v-else-if="scope.row.deliverState === 'FINISHED'" @click="popUpMenu(scope.row)">评价<i class="el-icon-edit"></i></el-button>
+          <el-button type="success" v-else @click="confirmReceive(scope.row)">确认收货</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,7 +71,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="menuDialogVis = false">取 消</el-button>
-        <el-button type="primary" @click="evaluate">确 定</el-button>
+        <el-button type="primary" @click="evaluate()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -68,7 +90,21 @@ export default {
       menuDialogVis: false,
       value: null,
       evaluateStr: "",
-      colors: ['#99A9BF', '#F7BA2A', '#FF9900']
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+      img:"",
+      evaluateUserId:0,
+      order: {
+        orderId:0,
+        img:"",
+        name:"",
+        count:0,
+        price:0,
+        deliverState: "",
+        dealStyle:"",
+        createTime:0,
+        receivedTime:0,
+        userEvaluate:""
+      }
     }
   },
   created() {
@@ -76,31 +112,48 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/role/page", {
+      this.request.get("/purchase-relationship/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          name: this.name,
+          // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
+          userId: 1,
+          name: this.name
         }
       }).then(res => {
         this.tableData = res.data.records
         this.total = res.data.total
       })
 
-      this.request.get("/menu/ids").then(res => {
-        this.ids = res.data
-      })
-
     },
     evaluate() {
-      // 评价
-      this.menuDialogVis = false
-      // console.log(this.evaluateStr)
-      // console.log(this.value)
+      // 设置评价和评分
+      this.request.get("/purchase-relationship/evaluate", {
+        params: {
+          orderId: this.evaluateUserId,
+          userEvaluate: this.evaluateStr,
+          score: this.value
+        }
+      }).then(res => {
+        if (res.code === '200') {
+          this.menuDialogVis = false
+          this.$message.success('评价成功')
+          this.load()
+        } else {
+          this.$message.error("评价失败")
+        }
+      })
     },
     confirmReceive(row) {
       // 确认收货
-      this.$message.success('确认收货')
+      this.request.get("/purchase-relationship/receive/" + row.orderId).then(res => {
+        if (res.code === '200') {
+          this.$message.success('确认成功')
+          this.load()
+        } else {
+          this.$message.error("收货失败")
+        }
+      })
     },
     reset() {
       this.name = ""
@@ -114,9 +167,24 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
-    selectMenu(role) {
-      // 设置评价和评分
+    popUpMenu(role) {
+      this.evaluateUserId = role.orderId
       this.menuDialogVis = true
+    },
+    formatterTime(row, column) {
+      var date = new Date();  // 初始化日期
+      if (column.property == "createTime") {
+        date = new Date(row.createTime);
+      } else if (column.property == "receivedTime") {
+        date = new Date(row.receivedTime);
+      }
+      var year = date.getFullYear(); //获取年份
+      var month = date.getMonth() + 1; // 获取月份
+      var day = date.getDate(); // 获取具体日
+      var hour = date.getHours(); // 获取时
+      var minutes = date.getMinutes(); // 获取分
+      var seconds = date.getSeconds(); // 获取秒
+      return year + '/' + month + '/' + day + ' ' + hour + ':' + minutes + ':' + seconds
     },
   }
 }

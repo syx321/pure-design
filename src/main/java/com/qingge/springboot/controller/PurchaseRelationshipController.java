@@ -51,25 +51,25 @@ public class PurchaseRelationshipController {
     }
 
     // 订单完成
-    @AuthAccess
     @GetMapping("/receive/{id}")
     public Result receive(@PathVariable Integer id) {
         return purchaseRelationshipService.receive(id);
     }
 
+    // 订单完成
+    @GetMapping("/evaluate")
+    public Result userEvalute(@RequestParam Integer orderId,
+                              @RequestParam String userEvaluate,
+                              @RequestParam Integer score) {
+        System.out.println(orderId);
+        System.out.println(orderId);
+        System.out.println(orderId);
+        return purchaseRelationshipService.userEvaluate(orderId, userEvaluate, score);
+    }
+
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
         return Result.success(purchaseRelationshipService.removeByIds(ids));
-    }
-
-    // 找到所有我的订单
-    @AuthAccess
-    @GetMapping("/findMyOrder/{id}")
-    public Result findMyOrder(@PathVariable Integer id) {
-        QueryWrapper<PurchaseRelationship> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", id);
-        List<PurchaseRelationship> purchaseRelationshipList = purchaseRelationshipMapper.selectList(queryWrapper);
-        return Result.success(purchaseRelationshipList);
     }
 
     @GetMapping
@@ -81,13 +81,12 @@ public class PurchaseRelationshipController {
     public Result findOne(@PathVariable Integer id) {
         return Result.success(purchaseRelationshipService.getById(id));
     }
-
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
-        QueryWrapper<PurchaseRelationship> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(purchaseRelationshipService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String name,
+                           @RequestParam Integer userId) {
+        return Result.success(purchaseRelationshipService.findMyOrder(new Page<>(pageNum, pageSize), name, userId));
     }
 
 }

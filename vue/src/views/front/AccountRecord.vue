@@ -3,7 +3,7 @@
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'">
       <el-table-column type="index" label="记录"></el-table-column>
       <el-table-column prop="rechargeRecord" label="充值金额"></el-table-column>
-      <el-table-column prop="time" label="时间" :formatter="formatterTime"></el-table-column>
+      <el-table-column label="时间" :formatter="formatterTime"></el-table-column>
     </el-table>
     <div style="padding: 10px 0">
       <el-pagination

@@ -1,7 +1,9 @@
 package com.qingge.springboot.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.ReceiveState;
 import com.qingge.springboot.common.Result;
+import com.qingge.springboot.controller.dto.OrderDTO;
 import com.qingge.springboot.entity.*;
 import com.qingge.springboot.mapper.*;
 import com.qingge.springboot.service.IPurchaseRelationshipService;
@@ -25,6 +27,9 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     PurchaseRelationshipMapper purchaseRelationshipMapper;
 
     @Resource
+    PersonMapper personMapper;
+
+    @Resource
     AccountChangeMapper accountChangeMapper;
 
     @Resource
@@ -38,15 +43,21 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         Long currentTime = System.currentTimeMillis();
 
         Product product = productMapper.selectById(productId);
-        AccountChange businessAccount = accountChangeMapper.selectById(businessId);
+        Person business = personMapper.selectById(businessId);
+        AccountChange businessAccount = new AccountChange();
 
         purchaseRelationship.setDeliverState(ReceiveState.FINISHED.toString());
         purchaseRelationship.setReceivedTime(currentTime);
 
+        businessAccount.setUserId(businessId);
         businessAccount.setIncomeRecord(product.getPrice() * purchaseRelationship.getCount());
+        businessAccount.setTime(currentTime);
+
+        business.setBalance(business.getBalance() + product.getPrice() * purchaseRelationship.getCount());
 
         purchaseRelationshipMapper.updateById(purchaseRelationship);
-        accountChangeMapper.updateById(businessAccount);
+        accountChangeMapper.insert(businessAccount);
+        personMapper.updateById(business);
 
         return Result.success();
     }
@@ -55,4 +66,19 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     public Boolean createOrder(PurchaseRelationship purchaseRelationship) {
         return save(purchaseRelationship);
     }
+
+    @Override
+    public Page<OrderDTO> findMyOrder(Page<OrderDTO> objectPage, String name, Integer userId) {
+        return purchaseRelationshipMapper.findMyOrder(objectPage, name, userId);
+    }
+
+    @Override
+    public Result userEvaluate(Integer orderId, String userEvaluate, Integer score) {
+        PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectById(orderId);
+        purchaseRelationship.setUserEvaluate(userEvaluate);
+        purchaseRelationship.setScore(score);
+        return Result.success(purchaseRelationshipMapper.updateById(purchaseRelationship));
+    }
+
+
 }
