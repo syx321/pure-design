@@ -55,6 +55,7 @@ public class ProductController {
         return productService.purchase(productId, userId, count);
     }
 
+    @AuthAccess
     @GetMapping
     public Result findAll() {
         return Result.success(productService.list());

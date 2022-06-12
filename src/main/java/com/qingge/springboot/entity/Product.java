@@ -32,6 +32,9 @@ public class Product implements Serializable {
 
     private Double price;
 
+      @ApiModelProperty("分类")
+      private String sort;
+
       @ApiModelProperty("尺寸")
       private Double size;
 

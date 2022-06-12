@@ -25,7 +25,7 @@
       <el-table-column prop="count" label="数量" width="45"></el-table-column>
       <el-table-column label="总价">
         <template slot-scope="scope">
-          <span style="font-size: 16px">{{scope.row.count * scope.row.price}}¥</span>
+          <span style="font-size: 16px">¥ {{scope.row.count * scope.row.price}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="sellerAttitude" label="商家态度评价"></el-table-column>
