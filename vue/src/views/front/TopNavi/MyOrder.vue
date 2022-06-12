@@ -19,6 +19,7 @@
       <el-table-column label="交易状态">
         <template slot-scope="scope">
           <el-tag type="warning" v-if="scope.row.deliverState === 'FINISHED'">已完成</el-tag>
+          <el-tag type="primary" v-else-if="scope.row.deliverState === 'RECEIVED'">已收货</el-tag>
           <el-tag type="primary" v-else>已发货</el-tag>
         </template>
       </el-table-column>
@@ -31,10 +32,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="userEvaluate" label="我的评价"></el-table-column>
-      <el-table-column label="操作" width="100" align="center">
+      <el-table-column label="操作" width="120" align="center">
         <template slot-scope="scope">
           <el-button type="info" v-if="scope.row.userEvaluate" disabled>已评价</el-button>
-          <el-button type="info" v-else-if="scope.row.deliverState === 'FINISHED'" @click="popUpMenu(scope.row)">评价<i class="el-icon-edit"></i></el-button>
+          <el-button type="info" v-else-if="scope.row.deliverState === 'RECEIVED'" @click="popUpMenu(scope.row)">评价<i class="el-icon-edit"></i></el-button>
           <el-button type="success" v-else @click="confirmReceive(scope.row)">确认收货</el-button>
         </template>
       </el-table-column>
@@ -61,6 +62,14 @@
               v-model="evaluateStr">
           </el-input>
         </el-form-item>
+        <el-form-item>
+          <el-input
+              type="textarea"
+              :rows="8"
+              placeholder="商家服务态度评价"
+              v-model="sellerAttitudeStr">
+          </el-input>
+        </el-form-item>
         <span style="text-align: center">交易评分</span>
         <el-form-item style="text-align: center">
           <el-rate
@@ -71,7 +80,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="menuDialogVis = false">取 消</el-button>
-        <el-button type="primary" @click="evaluate()">确 定</el-button>
+        <el-button type="primary" @click="evaluate">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -90,6 +99,7 @@ export default {
       menuDialogVis: false,
       value: null,
       evaluateStr: "",
+      sellerAttitudeStr:"",
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       img:"",
       evaluateUserId:0,
@@ -132,6 +142,7 @@ export default {
         params: {
           orderId: this.evaluateUserId,
           userEvaluate: this.evaluateStr,
+          sellerAttitude: this.sellerAttitudeStr,
           score: this.value
         }
       }).then(res => {

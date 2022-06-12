@@ -46,7 +46,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         Person business = personMapper.selectById(businessId);
         AccountChange businessAccount = new AccountChange();
 
-        purchaseRelationship.setDeliverState(ReceiveState.FINISHED.toString());
+        purchaseRelationship.setDeliverState(ReceiveState.RECEIVED.toString());
         purchaseRelationship.setReceivedTime(currentTime);
 
         businessAccount.setUserId(businessId);
@@ -73,10 +73,12 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     }
 
     @Override
-    public Result userEvaluate(Integer orderId, String userEvaluate, Integer score) {
+    public Result userEvaluate(Integer orderId, String userEvaluate, String sellerAttitude, Integer score) {
         PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectById(orderId);
+        purchaseRelationship.setDeliverState(ReceiveState.FINISHED.toString());
         purchaseRelationship.setUserEvaluate(userEvaluate);
         purchaseRelationship.setScore(score);
+        purchaseRelationship.setSellerAttitude(sellerAttitude);
         return Result.success(purchaseRelationshipMapper.updateById(purchaseRelationship));
     }
 

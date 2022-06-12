@@ -60,11 +60,9 @@ public class PurchaseRelationshipController {
     @GetMapping("/evaluate")
     public Result userEvalute(@RequestParam Integer orderId,
                               @RequestParam String userEvaluate,
+                              @RequestParam String sellerAttitude,
                               @RequestParam Integer score) {
-        System.out.println(orderId);
-        System.out.println(orderId);
-        System.out.println(orderId);
-        return purchaseRelationshipService.userEvaluate(orderId, userEvaluate, score);
+        return purchaseRelationshipService.userEvaluate(orderId, userEvaluate, sellerAttitude, score);
     }
 
     @PostMapping("/del/batch")
