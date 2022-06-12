@@ -16,4 +16,5 @@ public class OrderDTO {
     private String userEvaluate;
     private String sellerAttitude;
     private Integer score;
+    private String sellerEvaluate;
 }

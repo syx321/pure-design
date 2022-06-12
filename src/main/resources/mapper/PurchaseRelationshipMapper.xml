@@ -14,4 +14,16 @@
         </where>
     </select>
 
+    <select id="sellerAllOrder" resultType="com.qingge.springboot.controller.dto.OrderDTO">
+        select a.order_id, a.seller_evaluate, a.count, a.received_time, a.create_time, a.deliver_state, b.price, b.name, b.img, b.deal_style from purchase_relationship as a left join product as b on a.product_id = b.product_id
+        <where>
+            <if test="name != null and name != ''">
+                and b.name like concat('%', #{name} ,'%')
+            </if>
+            <if test="businessId != null and businessId != ''">
+                and a.business_id = #{businessId}
+            </if>
+        </where>
+    </select>
+
 </mapper>

@@ -58,11 +58,17 @@ public class PurchaseRelationshipController {
 
     // 订单完成
     @GetMapping("/evaluate")
-    public Result userEvalute(@RequestParam Integer orderId,
+    public Result userEvaluate(@RequestParam Integer orderId,
                               @RequestParam String userEvaluate,
                               @RequestParam String sellerAttitude,
                               @RequestParam Integer score) {
         return purchaseRelationshipService.userEvaluate(orderId, userEvaluate, sellerAttitude, score);
+    }
+    //商家评价
+    @GetMapping("/sellerEvaluate")
+    public Result sellerEvaluate(@RequestParam Integer orderId,
+                               @RequestParam String sellerEvaluate) {
+        return purchaseRelationshipService.sellerEvaluate(orderId, sellerEvaluate);
     }
 
     @PostMapping("/del/batch")
@@ -80,11 +86,19 @@ public class PurchaseRelationshipController {
         return Result.success(purchaseRelationshipService.getById(id));
     }
     @GetMapping("/page")
-    public Result findPage(@RequestParam Integer pageNum,
+    public Result userFindPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
                            @RequestParam(defaultValue = "") String name,
                            @RequestParam Integer userId) {
         return Result.success(purchaseRelationshipService.findMyOrder(new Page<>(pageNum, pageSize), name, userId));
+    }
+
+    @GetMapping("/sellerPage")
+    public Result sellerFindPage(@RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String name,
+                           @RequestParam Integer businessId) {
+        return Result.success(purchaseRelationshipService.sellerAllOrder(new Page<>(pageNum, pageSize), name, businessId));
     }
 
 }

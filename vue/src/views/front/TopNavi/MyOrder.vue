@@ -34,7 +34,7 @@
       <el-table-column prop="userEvaluate" label="我的评价"></el-table-column>
       <el-table-column label="操作" width="120" align="center">
         <template slot-scope="scope">
-          <el-button type="info" v-if="scope.row.userEvaluate" disabled>已评价</el-button>
+          <el-button type="success" v-if="scope.row.userEvaluate" disabled>已评价</el-button>
           <el-button type="info" v-else-if="scope.row.deliverState === 'RECEIVED'" @click="popUpMenu(scope.row)">评价<i class="el-icon-edit"></i></el-button>
           <el-button type="success" v-else @click="confirmReceive(scope.row)">确认收货</el-button>
         </template>
@@ -180,6 +180,7 @@ export default {
     },
     popUpMenu(role) {
       this.evaluateUserId = role.orderId
+      this.evaluateStr = "";
       this.menuDialogVis = true
     },
     formatterTime(row, column) {

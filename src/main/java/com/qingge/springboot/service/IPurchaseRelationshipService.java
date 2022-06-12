@@ -20,4 +20,6 @@ public interface IPurchaseRelationshipService extends IService<PurchaseRelations
     Boolean createOrder(PurchaseRelationship purchaseRelationship);
     Page<OrderDTO> findMyOrder(Page<OrderDTO> objectPage, String name, Integer userId);
     Result userEvaluate(Integer orderId, String userEvaluate, String sellerAttitude, Integer score);
+    Result sellerEvaluate(Integer orderId, String sellerEvaluate);
+    Page<OrderDTO> sellerAllOrder(Page<OrderDTO> objectPage, String name, Integer businessId);
 }

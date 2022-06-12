@@ -82,5 +82,17 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         return Result.success(purchaseRelationshipMapper.updateById(purchaseRelationship));
     }
 
+    @Override
+    public Result sellerEvaluate(Integer orderId, String sellerEvaluate) {
+        PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectById(orderId);
+        purchaseRelationship.setSellerEvaluate(sellerEvaluate);
+        return Result.success(purchaseRelationshipMapper.updateById(purchaseRelationship));
+    }
+
+    @Override
+    public Page<OrderDTO> sellerAllOrder(Page<OrderDTO> objectPage, String name, Integer businessId) {
+        return purchaseRelationshipMapper.sellerAllOrder(objectPage, name, businessId);
+    }
+
 
 }
