@@ -14,4 +14,6 @@ public class OrderDTO {
     private Integer count;
     private String deliverState;
     private String userEvaluate;
+    private String sellerAttitude;
+    private Integer score;
 }
