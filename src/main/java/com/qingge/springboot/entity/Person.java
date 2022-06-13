@@ -26,25 +26,24 @@ import lombok.Setter;
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
       @TableId(value = "user_id", type = IdType.AUTO)
       private Integer userId;
-
+   @TableField("username")
     private String username;
-
+    @TableField("password")
     private String password;
-
+    @TableField("name")
     private String name;
-
+    @TableField("phone")
     private String phone;
-
+    @TableField("email")
     private String email;
-
+    @TableField("city")
     private String city;
-
+    @TableField("sex")
     private Integer sex;
-
-    private String bankCard;
+    @TableField("bank_card")
+    private String bankcard;
 
       @ApiModelProperty("管理员、商家、用户")
       private String role;
@@ -61,7 +60,7 @@ public class Person implements Serializable {
     private String simpleInfo;
 
     private String wechat;
-
+    @TableField("address")
     private String address;
 
       @ApiModelProperty("购物积分(100减1元)")

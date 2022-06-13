@@ -18,7 +18,7 @@ public class PersonDTO {
 
     private Integer sex;
 
-    private String bankCard;
+    private String bankcard;
 
     private String role;//管理员、商家、用户
 
