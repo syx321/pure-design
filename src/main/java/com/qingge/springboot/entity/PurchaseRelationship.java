@@ -1,5 +1,7 @@
 package com.qingge.springboot.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -23,7 +25,7 @@ public class PurchaseRelationship implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("订单id")
+    @TableId(value = "order_id", type = IdType.AUTO)
     private Integer orderId;
 
     private Integer userId;

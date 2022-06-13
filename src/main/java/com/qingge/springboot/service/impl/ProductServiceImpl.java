@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.ReceiveState;
 import com.qingge.springboot.common.Result;
+import com.qingge.springboot.entity.AccountChange;
 import com.qingge.springboot.entity.Person;
 import com.qingge.springboot.entity.Product;
 import com.qingge.springboot.entity.PurchaseRelationship;
+import com.qingge.springboot.mapper.AccountChangeMapper;
 import com.qingge.springboot.mapper.PersonMapper;
 import com.qingge.springboot.mapper.ProductMapper;
 import com.qingge.springboot.service.IProductService;
@@ -34,16 +36,36 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private PersonMapper personMapper;
 
     @Resource
+    private AccountChangeMapper accountChangeMapper;
+
+    @Resource
     private IPurchaseRelationshipService purchaseRelationshipService;
 
     @Override
     public Result purchase(Integer productId, Integer userId, Integer count) {
         Product product = productMapper.selectById(productId);
-        Person person = personMapper.selectById(userId);
+        Person user = personMapper.selectById(userId);
+        Person business = personMapper.selectById(product.getBusinessId());
+        AccountChange accountChange = new AccountChange();
 
-        if (person.getBalance() > product.getPrice() * count) {
-            person.setBalance(person.getBalance() - product.getPrice() * count);
-            personMapper.updateById(person);
+        if (user.getBalance() > product.getPrice() * count) {
+
+            user.setBalance(user.getBalance() - product.getPrice() * count);
+            personMapper.updateById(user);
+
+            business.setBalance(business.getBalance() + product.getPrice() * count);
+            personMapper.updateById(business);
+
+            accountChange.setUserId(userId);
+            accountChange.setConsumeRecord(product.getPrice() * count);
+            accountChange.setTime(System.currentTimeMillis());
+            accountChangeMapper.insert(accountChange);
+
+            accountChange = new AccountChange();
+            accountChange.setUserId(business.getUserId());
+            accountChange.setIncomeRecord(product.getPrice() * count);
+            accountChange.setTime(System.currentTimeMillis());
+            accountChangeMapper.insert(accountChange);
 
             product.setHistorySaleNum(product.getHistorySaleNum() + 1);
             product.setPurchaseNum(product.getPurchaseNum() + 1);
@@ -60,9 +82,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
             //创建订单
             purchaseRelationshipService.createOrder(purchaseRelationship);
-            return Result.error(Constants.CODE_600, "余额不足");
-        } else {
             return Result.success();
+        } else {
+            return Result.error(Constants.CODE_600, "余额不足");
         }
     }
 

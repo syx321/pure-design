@@ -56,10 +56,10 @@
                 <router-link to="/front/person">个人信息</router-link>
               </el-dropdown-item>
               <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-                <router-link to="/front/person">充值记录</router-link>
+                <router-link to="/front/accountRecord">充值记录</router-link>
               </el-dropdown-item>
               <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-                <router-link to="/front/person">支付记录</router-link>
+                <router-link to="/front/consumeRecord">支付记录</router-link>
               </el-dropdown-item>
               <el-dropdown-item style="font-size: 14px; padding: 5px 0">
                 <span style="text-decoration: none" @click="logout">退出登录</span>

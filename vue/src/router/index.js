@@ -82,6 +82,14 @@ const routes = [
         path: 'sellerEvaluate',
         name: 'SellerEvaluate',
         component: () => import('../views/front/TopNavi/SellerEvaluate')
+      },{
+        path: 'accountRecord',
+        name: 'FrontAccountRecord',
+        component: () => import('../views/front/AccountRecord')
+      },{
+        path: 'consumeRecord',
+        name: 'ConsumeRecord',
+        component: () => import('../views/front/ConsumeRecord')
       },
     ]
   },

@@ -21,11 +21,11 @@
     </resultMap>
 
     <select id="findPage" resultMap="pageProduct">
-        select * from product where name like concat('%', #{name} ,'%')
-<!--        <where>-->
-<!--            <if test="name != null and name != ''">-->
-<!--                -->
-<!--            </if>-->
-<!--        </where>-->
+        select * from product
+        <where>
+            <if test="name != null and name != ''">
+                name like concat('%', #{name} ,'%')
+            </if>
+        </where>
     </select>
 </mapper>

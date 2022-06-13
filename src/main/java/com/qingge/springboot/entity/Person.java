@@ -45,6 +45,9 @@ public class Person implements Serializable {
     @TableField("bank_card")
     private String bankcard;
 
+      @ApiModelProperty("身份证照片")
+      private String idCardImg;
+
       @ApiModelProperty("管理员、商家、用户")
       private String role;
 
