@@ -89,7 +89,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
-    public Page<Product> findPage(Page<Product> objectPage, String name) {
-        return productMapper.findPage(objectPage, name);
+    public Result search(String name) {
+        return Result.success(productMapper.findPage(name));
     }
 }
