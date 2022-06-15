@@ -7,8 +7,12 @@ import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.config.AuthAccess;
 import com.qingge.springboot.controller.dto.PersonDTO;
 import com.qingge.springboot.controller.dto.UserDTO;
+import com.qingge.springboot.utils.ImageUtils;
+import com.qingge.springboot.utils.MultiToBase64;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qingge.springboot.common.Result;
@@ -17,6 +21,7 @@ import com.qingge.springboot.service.IPersonService;
 import com.qingge.springboot.entity.Person;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -52,7 +57,25 @@ public class PersonController {
 //        personService.saveOrUpdate(person);
 //        return Result.success();
 //    }
+    @PostMapping("/encode")
+    @AuthAccess
+    public String pictureEncoder(MultipartFile file){
+        MultiToBase64 multiToBase64 = new MultiToBase64();
+        try {
+            String encodeStr = multiToBase64.getBase64String(file);
+            return encodeStr;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Encode ERROR";
+        }
 
+    }
+    @PostMapping("/decode")
+    @AuthAccess
+    public MultipartFile pictureDecoder(String baseStr){
+        ImageUtils imageUtils = new ImageUtils();
+        return imageUtils.base64ToMultipartFile(baseStr);
+    }
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         personService.removeById(id);

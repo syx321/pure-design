@@ -20,6 +20,8 @@ public class PersonDTO {
 
     private String bankcard;
 
+    private String idCardImg;
+
     private String role;//管理员、商家、用户
 
     private String license;//商家营业执照img转二进制存储
