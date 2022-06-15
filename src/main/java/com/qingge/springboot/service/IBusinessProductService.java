@@ -1,5 +1,6 @@
 package com.qingge.springboot.service;
 
+import com.qingge.springboot.common.Result;
 import com.qingge.springboot.entity.BusinessProduct;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-06-09
  */
 public interface IBusinessProductService extends IService<BusinessProduct> {
+
+    public Result publishProduct(Integer productId, Integer userId);
+
+    public Result soldOutProduct(Integer productId, Integer userId);
+
+    public Result findProduct(Integer productId, Integer userId);
+
 
 }

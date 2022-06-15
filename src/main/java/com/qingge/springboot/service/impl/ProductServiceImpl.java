@@ -17,6 +17,8 @@ import com.qingge.springboot.service.IPurchaseRelationshipService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

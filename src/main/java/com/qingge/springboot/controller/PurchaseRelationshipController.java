@@ -9,6 +9,7 @@ import com.qingge.springboot.entity.AccountChange;
 import com.qingge.springboot.entity.Files;
 import com.qingge.springboot.mapper.AccountChangeMapper;
 import com.qingge.springboot.mapper.PurchaseRelationshipMapper;
+import com.qingge.springboot.service.impl.PurchaseRelationshipServiceImpl;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -85,6 +86,7 @@ public class PurchaseRelationshipController {
     public Result findOne(@PathVariable Integer id) {
         return Result.success(purchaseRelationshipService.getById(id));
     }
+
     @GetMapping("/page")
     public Result userFindPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
@@ -101,5 +103,10 @@ public class PurchaseRelationshipController {
         return Result.success(purchaseRelationshipService.sellerAllOrder(new Page<>(pageNum, pageSize), name, businessId));
     }
 
+    @PostMapping("/addProductToUserCart")
+    public Result addProductToUserCart(@RequestParam Integer userId,
+                                       @RequestBody List<Integer> productsId) {
+        return Result.success(purchaseRelationshipService.addProductToUserCart(productsId, userId));
+    }
 }
 

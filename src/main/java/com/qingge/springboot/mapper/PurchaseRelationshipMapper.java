@@ -19,4 +19,5 @@ public interface PurchaseRelationshipMapper extends BaseMapper<PurchaseRelations
     Page<OrderDTO> findMyOrder(Page<OrderDTO> page, @Param("name") String name, @Param("userId") Integer userId);
 
     Page<OrderDTO> sellerAllOrder(Page<OrderDTO> page, @Param("name") String name, @Param("businessId") Integer businessId);
+
 }

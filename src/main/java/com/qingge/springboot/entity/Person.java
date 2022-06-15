@@ -23,8 +23,8 @@ public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      @TableId(value = "user_id", type = IdType.AUTO)
-      private Integer userId;
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Integer userId;
 
     private String username;
 
@@ -42,20 +42,20 @@ public class Person implements Serializable {
 
     private String bankCard;
 
-      @ApiModelProperty("身份证照片")
-      private String idCardImg;
+    @ApiModelProperty("身份证照片")
+    private String idCardImg;
 
-      @ApiModelProperty("管理员、商家、用户")
-      private String role;
+    @ApiModelProperty("管理员、商家、用户")
+    private String role;
 
-      @ApiModelProperty("商家营业执照img转二进制存储")
-      private String license;
+    @ApiModelProperty("商家营业执照img转二进制存储")
+    private String license;
 
-      @ApiModelProperty("register_checked")
-      private Integer registerChecked;
+    @ApiModelProperty("register_checked")
+    private Integer registerChecked;
 
-      @ApiModelProperty("image转二进制")
-      private String avatar;
+    @ApiModelProperty("image转二进制")
+    private String avatar;
 
     private String simpleInfo;
 
@@ -63,14 +63,14 @@ public class Person implements Serializable {
 
     private String address;
 
-      @ApiModelProperty("购物积分(100减1元)")
-      private String shoppingPoints;
+    @ApiModelProperty("购物积分(100减1元)")
+    private String shoppingPoints;
 
-      @ApiModelProperty("账户余额")
-      private double balance;
+    @ApiModelProperty("账户余额")
+    private double balance;
 
-      @ApiModelProperty("卖家等级")
-      private Integer level;
+    @ApiModelProperty("卖家等级")
+    private Integer level;
 
 
 }

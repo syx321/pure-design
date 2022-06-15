@@ -1,6 +1,7 @@
 package com.qingge.springboot.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.ReceiveState;
 import com.qingge.springboot.common.Result;
 import com.qingge.springboot.controller.dto.OrderDTO;
@@ -11,6 +12,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -94,5 +97,34 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         return purchaseRelationshipMapper.sellerAllOrder(objectPage, name, businessId);
     }
 
+    @Override
+    public Result addProductToUserCart(List<Integer> productsId, Integer userId) {
+        if (productsId == null || userId == null) {
+            return Result.error(Constants.CODE_400, "productsId || userId为空");
+        }
+        List<Product> products = new ArrayList<>();
+        Person user = personMapper.selectById(userId);
+        for (Integer productId: productsId) {
+            Product product = productMapper.selectById(productId);
+            if (product == null) {
+                return Result.error(Constants.CODE_400, "productsId错误");
+            }
+            products.add(product);
+        }
+        if (user == null) {
+            return Result.error(Constants.CODE_400, "userId错误");
+        }
+
+        for (Product product: products) {
+            PurchaseRelationship purchaseRelationship = new PurchaseRelationship();
+            purchaseRelationship.setUserId(user.getUserId());
+            purchaseRelationship.setProductId(product.getProductId());
+            purchaseRelationship.setIsCart(1);
+            if (purchaseRelationshipMapper.insert(purchaseRelationship) == 0) {
+                return Result.error(Constants.CODE_400, "加入购物车失败");
+            }
+        }
+        return Result.success();
+    }
 
 }

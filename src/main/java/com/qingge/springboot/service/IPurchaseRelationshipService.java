@@ -1,11 +1,16 @@
 package com.qingge.springboot.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.Result;
 import com.qingge.springboot.controller.dto.OrderDTO;
+import com.qingge.springboot.entity.Person;
 import com.qingge.springboot.entity.Product;
 import com.qingge.springboot.entity.PurchaseRelationship;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -22,4 +27,6 @@ public interface IPurchaseRelationshipService extends IService<PurchaseRelations
     Result userEvaluate(Integer orderId, String userEvaluate, String sellerAttitude, Integer score);
     Result sellerEvaluate(Integer orderId, String sellerEvaluate);
     Page<OrderDTO> sellerAllOrder(Page<OrderDTO> objectPage, String name, Integer businessId);
+    // 加入购物车
+    public Result addProductToUserCart(List<Integer> productsId, Integer userId);
 }

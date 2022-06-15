@@ -5,6 +5,8 @@ import com.qingge.springboot.common.Result;
 import com.qingge.springboot.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类

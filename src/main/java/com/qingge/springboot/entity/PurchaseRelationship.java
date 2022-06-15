@@ -19,7 +19,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-  @TableName("purchase_relationship")
+@TableName("purchase_relationship")
 @ApiModel(value = "PurchaseRelationship对象", description = "")
 public class PurchaseRelationship implements Serializable {
 
@@ -36,29 +36,29 @@ public class PurchaseRelationship implements Serializable {
 
     private String userEvaluate;
 
-      @ApiModelProperty("购买数量")
-      private Integer count;
+    @ApiModelProperty("购买数量")
+    private Integer count;
 
-      @ApiModelProperty("商家服务态度")
-      private String sellerAttitude;
+    @ApiModelProperty("商家服务态度")
+    private String sellerAttitude;
 
-      @ApiModelProperty("交易状态")
-      private String deliverState;
+    @ApiModelProperty("交易状态")
+    private String deliverState;
 
-      @ApiModelProperty("拿时间戳算收货时长")
-      private Long receivedTime;
+    @ApiModelProperty("拿时间戳算收货时长")
+    private Long receivedTime;
 
-      @ApiModelProperty("本次交易评分")
-      private Integer score;
+    @ApiModelProperty("本次交易评分")
+    private Integer score;
 
-      @ApiModelProperty("卖家对客户评价")
-      private String sellerEvaluate;
+    @ApiModelProperty("卖家对客户评价")
+    private String sellerEvaluate;
 
-      @ApiModelProperty("是否在购物车")
-      private Integer isCart;
+    @ApiModelProperty("是否在购物车")
+    private Integer isCart;
 
-      @ApiModelProperty("订单创建时间")
-      private Long createTime;
+    @ApiModelProperty("订单创建时间")
+    private Long createTime;
 
 
 }
