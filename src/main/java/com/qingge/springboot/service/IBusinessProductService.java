@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author longdengyu
@@ -14,11 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IBusinessProductService extends IService<BusinessProduct> {
 
-    public Result publishProduct(Integer productId, Integer userId);
+    Result publishProduct(Integer productId, Integer userId);
 
-    public Result soldOutProduct(Integer productId, Integer userId);
+    Result soldOutProduct(Integer productId, Integer userId);
 
-    public Result findProduct(Integer productId, Integer userId);
+    Result findProduct(Integer productId, Integer userId);
 
 
 }

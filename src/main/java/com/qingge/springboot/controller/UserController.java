@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author 青哥哥
@@ -76,6 +76,7 @@ public class UserController {
 
     /**
      * 修改密码
+     *
      * @param userPasswordDTO
      * @return
      */
@@ -122,10 +123,10 @@ public class UserController {
 
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                               @RequestParam Integer pageSize,
-                               @RequestParam(defaultValue = "") String username,
-                               @RequestParam(defaultValue = "") String email,
-                               @RequestParam(defaultValue = "") String address) {
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username,
+                           @RequestParam(defaultValue = "") String email,
+                           @RequestParam(defaultValue = "") String address) {
 
 //        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.orderByDesc("id");
@@ -180,6 +181,7 @@ public class UserController {
 
     /**
      * excel 导入
+     *
      * @param file
      * @throws Exception
      */

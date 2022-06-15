@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 青哥哥
@@ -114,6 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     /**
      * 获取当前角色的菜单列表
+     *
      * @param roleFlag
      * @return
      */

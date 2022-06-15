@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author longdengyu
@@ -16,5 +16,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface ProductMapper extends BaseMapper<Product> {
     Page<Product> findPage(Page<Product> page,
-                        @Param("name") String name);
+                           @Param("name") String name);
 }

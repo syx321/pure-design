@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author longdengyu
@@ -18,5 +18,6 @@ import java.util.List;
 public interface IProductService extends IService<Product> {
 
     Result purchase(Integer productId, Integer userId, Integer count);
+
     Page<Product> findPage(Page<Product> objectPage, String name);
 }

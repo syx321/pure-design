@@ -1,5 +1,6 @@
 package com.qingge.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
@@ -18,7 +19,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author longdengyu
@@ -105,7 +106,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         }
         List<Product> products = new ArrayList<>();
         Person user = personMapper.selectById(userId);
-        for (Integer productId: productsId) {
+        for (Integer productId : productsId) {
             Product product = productMapper.selectById(productId);
             if (product == null) {
                 return Result.error(Constants.CODE_400, "productsId错误");
@@ -116,28 +117,33 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
             return Result.error(Constants.CODE_400, "userId错误");
         }
 
-        for (Product product: products) {
+        for (Product product : products) {
             PurchaseRelationship currentRelationShip = purchaseRelationshipMapper.selectOne(
                     new QueryWrapper<PurchaseRelationship>()
-                            .eq("user_id",userId)
+                            .eq("user_id", userId)
                             .eq("product_id", product.getProductId())
                             .eq("is_cart", 1)
+            );
+            Product currentProduct = productMapper.selectOne(
+                    new QueryWrapper<Product>()
+                            .eq("product_id", product.getProductId())
             );
             PurchaseRelationship purchaseRelationship = new PurchaseRelationship();
             purchaseRelationship.setUserId(user.getUserId());
             purchaseRelationship.setProductId(product.getProductId());
             purchaseRelationship.setIsCart(1);
+            purchaseRelationship.setBusinessId(currentProduct.getBusinessId());
             purchaseRelationship.setCount(currentRelationShip != null ? currentRelationShip.getCount() + 1 : 1);
             purchaseRelationship.setOrderId(currentRelationShip != null ? currentRelationShip.getOrderId() : null);
             purchaseRelationship.setCreateTime(System.currentTimeMillis());
             if (currentRelationShip != null) {
                 if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
-                    return Result.error(Constants.CODE_400, "加入购物车失败");
+                    return Result.error(Constants.CODE_400, "加入购物车失败" + purchaseRelationship);
                 }
             } else {
                 purchaseRelationship.setCount(1);
                 if (purchaseRelationshipMapper.insert(purchaseRelationship) == 0) {
-                    return Result.error(Constants.CODE_400, "加入购物车失败");
+                    return Result.error(Constants.CODE_400, "加入购物车失败" + purchaseRelationship);
                 }
             }
 
@@ -146,7 +152,19 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     }
 
     @Override
-    public Result PlaceOrdersAtOnce(Integer userId) {
+    public Result placeOrdersAtOnce(Integer userId) {
+        List<PurchaseRelationship> purchaseRelationships = purchaseRelationshipMapper.selectList(
+                new QueryWrapper<PurchaseRelationship>()
+                        .eq("user_id", userId)
+                        .eq("is_cart", 1)
+        );
+        for (PurchaseRelationship purchaseRelationship : purchaseRelationships) {
+            purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
+            purchaseRelationship.setIsCart(0);
+            if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
+                return Result.error(Constants.CODE_400, "购物车一键下单失败" + purchaseRelationship);
+            }
+        }
         return Result.success("购物车一键下单成功");
     }
 
