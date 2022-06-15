@@ -11,6 +11,7 @@ import com.qingge.springboot.entity.*;
 import com.qingge.springboot.mapper.*;
 import com.qingge.springboot.service.IPurchaseRelationshipService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -100,10 +101,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     }
 
     @Override
-    public Result addProductToUserCart(List<Integer> productsId, Integer userId) {
-        if (productsId == null || userId == null) {
-            return Result.error(Constants.CODE_400, "productsId || userId为空");
-        }
+    public Result addProductToUserCart(@NonNull List<Integer> productsId,@NonNull Integer userId) {
         List<Product> products = new ArrayList<>();
         Person user = personMapper.selectById(userId);
         for (Integer productId : productsId) {
@@ -152,7 +150,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     }
 
     @Override
-    public Result placeOrdersAtOnce(Integer userId) {
+    public Result placeOrdersAtOnce(@NonNull Integer userId) {
         List<PurchaseRelationship> purchaseRelationships = purchaseRelationshipMapper.selectList(
                 new QueryWrapper<PurchaseRelationship>()
                         .eq("user_id", userId)
@@ -166,6 +164,31 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
             }
         }
         return Result.success("购物车一键下单成功");
+    }
+
+    @Override
+    public Result requestForReturn(@NonNull Integer userId,@NonNull Integer productId) {
+        PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectOne(
+                new QueryWrapper<PurchaseRelationship>()
+                        .eq("user_id", userId)
+                        .eq("product_id", productId)
+                        .eq("is_cart", "0")
+        );
+        if (purchaseRelationship == null) {
+            return Result.error(Constants.CODE_400, "退货失败，未查询到商品");
+        }
+
+        if (purchaseRelationship.getDeliverState().equals(ReceiveState.reject_return.toString()) ||
+        purchaseRelationship.getDeliverState().equals(ReceiveState.request_return.toString())) {
+            return Result.error(Constants.CODE_400, "退货失败，已申请或已驳回");
+        }
+
+        purchaseRelationship.setDeliverState(ReceiveState.request_return.toString());
+        if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
+            return Result.error(Constants.CODE_400, "退货失败，更新数据失败" + purchaseRelationship);
+        }
+
+        return Result.success("退货申请成功");
     }
 
 }

@@ -101,12 +101,18 @@ public class PurchaseRelationshipController {
     @PostMapping("/addProductToUserCart")
     public Result addProductToUserCart(@RequestParam Integer userId,
                                        @RequestBody List<Integer> productsId) {
-        return Result.success(purchaseRelationshipService.addProductToUserCart(productsId, userId));
+        return purchaseRelationshipService.addProductToUserCart(productsId, userId);
     }
 
     @PostMapping("/placeOrdersAtOnce")
     public Result placeOrdersAtOnce(@RequestParam Integer userId) {
-        return Result.success(purchaseRelationshipService.placeOrdersAtOnce(userId));
+        return purchaseRelationshipService.placeOrdersAtOnce(userId);
+    }
+
+    @PostMapping("requestForReturn")
+    public Result requestForReturn(@RequestParam Integer userId,
+                                   @RequestBody Integer productId) {
+        return purchaseRelationshipService.requestForReturn(userId, productId);
     }
 }
 

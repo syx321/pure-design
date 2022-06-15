@@ -34,4 +34,6 @@ public interface IPurchaseRelationshipService extends IService<PurchaseRelations
 
     //一键下单购物车
     Result placeOrdersAtOnce(Integer userId);
+
+    Result requestForReturn(Integer userId, Integer productsId);
 }
