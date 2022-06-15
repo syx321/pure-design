@@ -1,5 +1,6 @@
 package com.qingge.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.ReceiveState;
@@ -116,15 +117,37 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         }
 
         for (Product product: products) {
+            PurchaseRelationship currentRelationShip = purchaseRelationshipMapper.selectOne(
+                    new QueryWrapper<PurchaseRelationship>()
+                            .eq("user_id",userId)
+                            .eq("product_id", product.getProductId())
+                            .eq("is_cart", 1)
+            );
             PurchaseRelationship purchaseRelationship = new PurchaseRelationship();
             purchaseRelationship.setUserId(user.getUserId());
             purchaseRelationship.setProductId(product.getProductId());
             purchaseRelationship.setIsCart(1);
-            if (purchaseRelationshipMapper.insert(purchaseRelationship) == 0) {
-                return Result.error(Constants.CODE_400, "加入购物车失败");
+            purchaseRelationship.setCount(currentRelationShip != null ? currentRelationShip.getCount() + 1 : 1);
+            purchaseRelationship.setOrderId(currentRelationShip != null ? currentRelationShip.getOrderId() : null);
+            purchaseRelationship.setCreateTime(System.currentTimeMillis());
+            if (currentRelationShip != null) {
+                if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
+                    return Result.error(Constants.CODE_400, "加入购物车失败");
+                }
+            } else {
+                purchaseRelationship.setCount(1);
+                if (purchaseRelationshipMapper.insert(purchaseRelationship) == 0) {
+                    return Result.error(Constants.CODE_400, "加入购物车失败");
+                }
             }
+
         }
-        return Result.success();
+        return Result.success("添加购物车成功");
+    }
+
+    @Override
+    public Result PlaceOrdersAtOnce(Integer userId) {
+        return Result.success("购物车一键下单成功");
     }
 
 }

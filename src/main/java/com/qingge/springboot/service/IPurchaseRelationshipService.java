@@ -29,4 +29,6 @@ public interface IPurchaseRelationshipService extends IService<PurchaseRelations
     Page<OrderDTO> sellerAllOrder(Page<OrderDTO> objectPage, String name, Integer businessId);
     // 加入购物车
     public Result addProductToUserCart(List<Integer> productsId, Integer userId);
+    //一键下单购物车
+    public Result PlaceOrdersAtOnce(Integer userId);
 }

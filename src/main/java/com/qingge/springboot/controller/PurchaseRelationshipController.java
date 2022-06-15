@@ -108,5 +108,10 @@ public class PurchaseRelationshipController {
                                        @RequestBody List<Integer> productsId) {
         return Result.success(purchaseRelationshipService.addProductToUserCart(productsId, userId));
     }
+
+    @PostMapping("/PlaceOrdersAtOnce")
+    public Result PlaceOrdersAtOnce(@RequestParam Integer userId) {
+        return Result.success(purchaseRelationshipService.PlaceOrdersAtOnce(userId));
+    }
 }
 
