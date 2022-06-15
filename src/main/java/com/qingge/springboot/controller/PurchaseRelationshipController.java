@@ -105,7 +105,7 @@ public class PurchaseRelationshipController {
     }
 
     @PostMapping("/placeOrdersAtOnce")
-    public Result PlaceOrdersAtOnce(@RequestParam Integer userId) {
+    public Result placeOrdersAtOnce(@RequestParam Integer userId) {
         return Result.success(purchaseRelationshipService.placeOrdersAtOnce(userId));
     }
 }
