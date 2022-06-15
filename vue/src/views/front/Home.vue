@@ -9,6 +9,16 @@
     </div>
 
     <div style="margin: 10px 0">
+      <el-input style="width:360px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="name"></el-input>
+      <el-button class="ml-5" @click="search">搜索</el-button>
+      <el-button class="ml-5" @click="reset">重置</el-button>
+      <span style="padding-left: 285px;padding-right: 20px;font-size: 18px"></span>
+      <el-button class="ml-5" type="primary" @click="sortByPrice">价格</el-button>
+      <el-button class="ml-5" type="primary" @click="sortByGoodRate">好评度</el-button>
+      <el-button class="ml-5" type="primary" @click="sortBySalesVolume">销量</el-button>
+    </div>
+
+    <div style="margin: 10px 0">
       <el-row :gutter="10">
         <el-col :span="6" v-for="item in tableData" :key="item.productId" style="margin-bottom: 10px">
 
@@ -43,6 +53,7 @@ export default {
   data() {
     return {
       tableData: [],
+      total:0,
       imgs: [
           'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp',
           'https://img13.360buyimg.com/babel/s1580x830_jfs/t1/96398/30/23715/70228/6221e9d0Ec1b9fe65/f66e2ad76314d6cd.jpg!cc_1580x830.webp'
@@ -55,8 +66,10 @@ export default {
         size:0,
         sort:"",
         purchaseNum:0,
-        score:0
-      }
+        score:0,
+        favorableRate:0,
+      },
+      name:""
     }
   },
   created() {
@@ -69,22 +82,67 @@ export default {
       })
     },
     purchase(product){
-      this.request.get("/product/purchase", {
-        params: {
-          productId: product.productId,
-          // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
-          userId: 1,
-          count: 1
-        }
-      }).then(res => {
+      // this.request.get("/person/" + localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 1).then(res => {
+      this.request.get("/person/" + 1).then(res => {
         if (res.code === '200') {
-          this.$message.success('购买成功')
-          this.load();
-        } else {
-          this.$message.error("购买失败")
+          this.$confirm(res.data.shoppingPoints + '积分将优惠' + parseInt(res.data.shoppingPoints / 100) + '元', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.request.get("/product/purchase", {
+              params: {
+                productId: product.productId,
+                // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
+                userId: 1,
+                count: 1
+              }
+            }).then(res => {
+              if (res.code === '200') {
+                this.$message.success('购买成功')
+                this.load();
+              } else {
+                this.$message.error("余额不足，购买失败")
+              }
+            })
+          }).catch(() => {
+            //取消什么都不做
+          });
         }
       })
+    },
+    search() {
+      console.log(name)
+      this.request.get("/product/search", {
+        params: {
+          name: this.name
+        }
+      }).then(res => {
+        console.log(res)
+        this.tableData = res.data.data
+      })
+    },
+    reset() {
+      this.name = ""
+      this.load()
+    },
+    sortByPrice() {
+      this.tableData.sort(function (a, b){
+        return b.price - a.price
+      })
+    },
+    sortByGoodRate() {
+      this.tableData.sort(function (a, b){
+        return b.favorableRate - a.favorableRate
+      })
+    },
+    sortBySalesVolume() {
+      this.tableData.sort(function (a, b){
+        return b.purchaseNum - a.purchaseNum
+      })
+      console.log(this.tableData)
     }
+
   }
 }
 </script>

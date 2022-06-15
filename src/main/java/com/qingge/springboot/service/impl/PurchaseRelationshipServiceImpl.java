@@ -49,10 +49,8 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     public Result receive(Integer id) {
         PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectById(id);
         Integer businessId = purchaseRelationship.getBusinessId();
-        Integer productId = purchaseRelationship.getProductId();
         Long currentTime = System.currentTimeMillis();
 
-        Product product = productMapper.selectById(productId);
         Person business = personMapper.selectById(businessId);
         AccountChange businessAccount = new AccountChange();
 
@@ -60,10 +58,10 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         purchaseRelationship.setReceivedTime(currentTime);
 
         businessAccount.setUserId(businessId);
-        businessAccount.setIncomeRecord(product.getPrice() * purchaseRelationship.getCount());
+        businessAccount.setIncomeRecord(purchaseRelationship.getTotal());
         businessAccount.setTime(currentTime);
 
-        business.setBalance(business.getBalance() + product.getPrice() * purchaseRelationship.getCount());
+        business.setBalance(business.getBalance() + purchaseRelationship.getTotal());
 
         purchaseRelationshipMapper.updateById(purchaseRelationship);
         accountChangeMapper.insert(businessAccount);

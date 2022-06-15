@@ -17,12 +17,10 @@ import com.qingge.springboot.service.IPurchaseRelationshipService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
- * 服务实现类
+ *  服务实现类
  * </p>
  *
  * @author longdengyu
@@ -47,28 +45,19 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public Result purchase(Integer productId, Integer userId, Integer count) {
         Product product = productMapper.selectById(productId);
         Person user = personMapper.selectById(userId);
-        Person business = personMapper.selectById(product.getBusinessId());
         AccountChange accountChange = new AccountChange();
+
 
         if (user.getBalance() > product.getPrice() * count) {
 
-            double cost = user.getBalance() - product.getPrice() * count;
-            user.setBalance(cost);
-            double currentPoint = user.getShoppingPoints() == null ? 0 : Double.parseDouble(user.getShoppingPoints());
-            user.setShoppingPoints(String.valueOf(currentPoint + cost));
+            Integer shoppingPoints = user.getShoppingPoints();
+            Integer coupon = user.getShoppingPoints() / 100;
+            user.setBalance(user.getBalance() - product.getPrice() * count - coupon);
+            user.setShoppingPoints(shoppingPoints % 100);
             personMapper.updateById(user);
 
-            business.setBalance(business.getBalance() + product.getPrice() * count);
-            personMapper.updateById(business);
-
             accountChange.setUserId(userId);
-            accountChange.setConsumeRecord(product.getPrice() * count);
-            accountChange.setTime(System.currentTimeMillis());
-            accountChangeMapper.insert(accountChange);
-
-            accountChange = new AccountChange();
-            accountChange.setUserId(business.getUserId());
-            accountChange.setIncomeRecord(product.getPrice() * count);
+            accountChange.setConsumeRecord(product.getPrice() * count - coupon);
             accountChange.setTime(System.currentTimeMillis());
             accountChangeMapper.insert(accountChange);
 
@@ -94,7 +83,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
-    public Page<Product> findPage(Page<Product> objectPage, String name) {
-        return productMapper.findPage(objectPage, name);
+    public Result search(String name) {
+        return Result.success(productMapper.findPage(name));
     }
 }

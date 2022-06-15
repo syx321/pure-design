@@ -114,6 +114,9 @@ export default {
       if (column.property == "createTime") {
         date = new Date(row.createTime);
       } else if (column.property == "receivedTime") {
+        if (row.receivedTime == 0) {
+          return '未收货'
+        }
         date = new Date(row.receivedTime);
       }
       var year = date.getFullYear(); //获取年份

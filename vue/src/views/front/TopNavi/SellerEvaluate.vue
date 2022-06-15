@@ -16,8 +16,9 @@
       <el-table-column prop="name" label="名称"></el-table-column>
       <el-table-column label="交易状态">
         <template slot-scope="scope">
-          <el-tag type="warning" v-if="scope.row.deliverState === 'FINISHED'">已完成</el-tag>
-          <el-tag type="primary" v-else>已发货</el-tag>
+          <el-tag type="success" v-if="scope.row.deliverState === 'FINISHED'">已完成</el-tag>
+          <el-tag type="primary" v-else-if="scope.row.deliverState === 'RECEIVED'">已收货</el-tag>
+          <el-tag type="warning" v-else>已发货</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="订单创建时间" width="135" :formatter="formatterTime"></el-table-column>
@@ -28,11 +29,12 @@
           <span style="font-size: 16px">¥ {{scope.row.count * scope.row.price}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="sellerEvaluate" label="商家评价"></el-table-column>
-      <el-table-column label="操作" width="120" align="center">
+      <el-table-column prop="sellerEvaluate" label="商家评价" :formatter="displayEvaluateStr"></el-table-column>
+      <el-table-column label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button type="success" v-if="scope.row.sellerEvaluate" disabled>已评价</el-button>
-          <el-button type="info" v-else @click="popUpMenu(scope.row)">评价<i class="el-icon-edit"></i></el-button>
+          <el-button type="warning" v-else-if="scope.row.receivedTime == 0" disabled>用户收货后评价</el-button>
+          <el-button type="primary" v-else @click="popUpMenu(scope.row)">评价<i class="el-icon-edit"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -158,6 +160,9 @@ export default {
       if (column.property == "createTime") {
         date = new Date(row.createTime);
       } else if (column.property == "receivedTime") {
+        if (row.receivedTime == 0) {
+          return '未收货'
+        }
         date = new Date(row.receivedTime);
       }
       var year = date.getFullYear(); //获取年份
@@ -168,6 +173,14 @@ export default {
       var seconds = date.getSeconds(); // 获取秒
       return year + '/' + month + '/' + day + ' ' + hour + ':' + minutes + ':' + seconds
     },
+    displayEvaluateStr(row, column) {
+      if (row.sellerEvaluate) {
+        return row.sellerEvaluate
+      } else {
+        return '未评价'
+      }
+    }
+
   }
 }
 </script>
