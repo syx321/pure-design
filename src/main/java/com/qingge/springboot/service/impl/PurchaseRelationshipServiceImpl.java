@@ -101,7 +101,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     }
 
     @Override
-    public Result addProductToUserCart(@NonNull List<Integer> productsId,@NonNull Integer userId) {
+    public Result addProductToUserCart(@NonNull List<Integer> productsId, @NonNull Integer userId) {
         List<Product> products = new ArrayList<>();
         Person user = personMapper.selectById(userId);
         for (Integer productId : productsId) {
@@ -159,6 +159,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         for (PurchaseRelationship purchaseRelationship : purchaseRelationships) {
             purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
             purchaseRelationship.setIsCart(0);
+            purchaseRelationship.setCreateTime(System.currentTimeMillis());
             if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
                 return Result.error(Constants.CODE_400, "购物车一键下单失败" + purchaseRelationship);
             }
@@ -167,7 +168,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
     }
 
     @Override
-    public Result requestForReturn(@NonNull Integer userId,@NonNull Integer productId) {
+    public Result requestForReturn(@NonNull Integer userId, @NonNull Integer productId) {
         PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectOne(
                 new QueryWrapper<PurchaseRelationship>()
                         .eq("user_id", userId)
@@ -179,8 +180,12 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         }
 
         if (purchaseRelationship.getDeliverState().equals(ReceiveState.reject_return.toString()) ||
-        purchaseRelationship.getDeliverState().equals(ReceiveState.request_return.toString())) {
+                purchaseRelationship.getDeliverState().equals(ReceiveState.request_return.toString())) {
             return Result.error(Constants.CODE_400, "退货失败，已申请或已驳回");
+        }
+
+        if ((System.currentTimeMillis() - purchaseRelationship.getCreateTime()) > 24 * 60 * 60 * 1000) {
+            return Result.error(Constants.CODE_400, "退货失败，已超过24h");
         }
 
         purchaseRelationship.setDeliverState(ReceiveState.request_return.toString());
