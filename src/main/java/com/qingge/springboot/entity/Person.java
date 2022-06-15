@@ -64,7 +64,7 @@ public class Person implements Serializable {
     private String address;
 
       @ApiModelProperty("购物积分(100减1元)")
-      private String shoppingPoints;
+      private Integer shoppingPoints;
 
       @ApiModelProperty("账户余额")
       private double balance;

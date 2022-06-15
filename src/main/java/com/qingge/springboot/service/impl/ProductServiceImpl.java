@@ -45,25 +45,19 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public Result purchase(Integer productId, Integer userId, Integer count) {
         Product product = productMapper.selectById(productId);
         Person user = personMapper.selectById(userId);
-        Person business = personMapper.selectById(product.getBusinessId());
         AccountChange accountChange = new AccountChange();
+
 
         if (user.getBalance() > product.getPrice() * count) {
 
-            user.setBalance(user.getBalance() - product.getPrice() * count);
+            Integer shoppingPoints = user.getShoppingPoints();
+            Integer coupon = user.getShoppingPoints() / 100;
+            user.setBalance(user.getBalance() - product.getPrice() * count - coupon);
+            user.setShoppingPoints(shoppingPoints % 100);
             personMapper.updateById(user);
 
-            business.setBalance(business.getBalance() + product.getPrice() * count);
-            personMapper.updateById(business);
-
             accountChange.setUserId(userId);
-            accountChange.setConsumeRecord(product.getPrice() * count);
-            accountChange.setTime(System.currentTimeMillis());
-            accountChangeMapper.insert(accountChange);
-
-            accountChange = new AccountChange();
-            accountChange.setUserId(business.getUserId());
-            accountChange.setIncomeRecord(product.getPrice() * count);
+            accountChange.setConsumeRecord(product.getPrice() * count - coupon);
             accountChange.setTime(System.currentTimeMillis());
             accountChangeMapper.insert(accountChange);
 

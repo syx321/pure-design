@@ -82,19 +82,32 @@ export default {
       })
     },
     purchase(product){
-      this.request.get("/product/purchase", {
-        params: {
-          productId: product.productId,
-          // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
-          userId: 1,
-          count: 1
-        }
-      }).then(res => {
+      // this.request.get("/person/" + localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 1).then(res => {
+      this.request.get("/person/" + 1).then(res => {
         if (res.code === '200') {
-          this.$message.success('购买成功')
-          this.load();
-        } else {
-          this.$message.error("余额不足，购买失败")
+          this.$confirm(res.data.shoppingPoints + '积分将优惠' + parseInt(res.data.shoppingPoints / 100) + '元', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.request.get("/product/purchase", {
+              params: {
+                productId: product.productId,
+                // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
+                userId: 1,
+                count: 1
+              }
+            }).then(res => {
+              if (res.code === '200') {
+                this.$message.success('购买成功')
+                this.load();
+              } else {
+                this.$message.error("余额不足，购买失败")
+              }
+            })
+          }).catch(() => {
+            //取消什么都不做
+          });
         }
       })
     },
