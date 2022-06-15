@@ -24,7 +24,6 @@ public class BusinessProductServiceImpl extends ServiceImpl<BusinessProductMappe
     @Resource
     private ProductMapper productMapper;
 
-
     @Override
     public Result publishProduct(Integer productId, Integer userId) {
         return null;

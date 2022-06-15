@@ -9,6 +9,7 @@ import com.qingge.springboot.common.Result;
 import com.qingge.springboot.controller.dto.OrderDTO;
 import com.qingge.springboot.entity.*;
 import com.qingge.springboot.mapper.*;
+import com.qingge.springboot.service.IProductService;
 import com.qingge.springboot.service.IPurchaseRelationshipService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.NonNull;
@@ -40,6 +41,9 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
 
     @Resource
     ProductMapper productMapper;
+
+    @Resource
+    IProductService productService;
 
     @Override
     public Result receive(Integer id) {
@@ -166,23 +170,11 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         if (purchaseRelationships == null) {
             return Result.error(Constants.CODE_400, "购物车一键下单失败，购物车为空" + userId);
         }
-        double cost = 0.0;
         for (PurchaseRelationship purchaseRelationship : purchaseRelationships) {
-            purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
-            purchaseRelationship.setIsCart(0);
-            purchaseRelationship.setCreateTime(System.currentTimeMillis());
-            if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
-                return Result.error(Constants.CODE_400, "购物车一键下单失败" + purchaseRelationship);
+            Result result = productService.purchase(purchaseRelationship.getProductId(), userId, purchaseRelationship.getCount());
+            if (!result.equals(Result.success())) {
+                return result;
             }
-            cost += productMapper.selectOne(
-                    new QueryWrapper<Product>()
-                            .eq("product_id", purchaseRelationship.getProductId())
-            ).getPrice()*purchaseRelationship.getCount();
-        }
-        double currentPoint = person.getShoppingPoints() == null ? 0 : Double.parseDouble(person.getShoppingPoints());
-        person.setShoppingPoints(String.valueOf(currentPoint + cost/100));
-        if (personMapper.updateById(person) == 0) {
-            return Result.error(Constants.CODE_400, "积分添加失败");
         }
         return Result.success("购物车一键下单成功");
     }
@@ -215,5 +207,4 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
 
         return Result.success("退货申请成功");
     }
-
 }

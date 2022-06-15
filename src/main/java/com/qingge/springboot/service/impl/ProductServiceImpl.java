@@ -52,7 +52,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         if (user.getBalance() > product.getPrice() * count) {
 
-            user.setBalance(user.getBalance() - product.getPrice() * count);
+            double cost = user.getBalance() - product.getPrice() * count;
+            user.setBalance(cost);
+            double currentPoint = user.getShoppingPoints() == null ? 0 : Double.parseDouble(user.getShoppingPoints());
+            user.setShoppingPoints(String.valueOf(currentPoint + cost));
             personMapper.updateById(user);
 
             business.setBalance(business.getBalance() + product.getPrice() * count);
