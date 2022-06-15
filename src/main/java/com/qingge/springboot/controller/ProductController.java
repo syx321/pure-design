@@ -66,11 +66,9 @@ public class ProductController {
         return Result.success(productService.getById(id));
     }
 
-    @GetMapping("/page")
-    public Result findPage(@RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize,
-                           @RequestParam(defaultValue = "") String username) {
-        return Result.success(productService.findPage(new Page<>(pageNum, pageSize), username));
+    @GetMapping("/search")
+    public Result search(@RequestParam(defaultValue = "") String name) {
+        return Result.success(productService.search(name));
     }
 
 }

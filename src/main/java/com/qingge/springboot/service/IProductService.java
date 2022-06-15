@@ -16,5 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IProductService extends IService<Product> {
 
     Result purchase(Integer productId, Integer userId, Integer count);
-    Page<Product> findPage(Page<Product> objectPage, String name);
+    Result search(String name);
 }
