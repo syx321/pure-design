@@ -23,7 +23,7 @@ public class VerifyController {
         return verifyService.getCode(response,request);
     }
     //验证码验证
-    @PostMapping(value = "/checkcode")
+    @GetMapping(value = "/checkcode")
     @ResponseBody
     @AuthAccess
     public String checkTcode(HttpServletRequest request,HttpServletResponse response) {

@@ -27,7 +27,7 @@
           <el-input placeholder="请输入银行账号" size="small" style="margin: 5px 0;width: 320px" prefix-icon="el-icon-user" v-model="user.bankcard"></el-input>
         </el-form-item >
         <el-form-item  label="验证码" style="margin-bottom: 15px;margin-right: 5px;text-align: center;" prop="verify" align="center"  >
-          <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 224px" prefix-icon="el-icon-user" v-model="this.verifyCode"></el-input>
+          <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 224px" prefix-icon="el-icon-user" v-model="user.verifyCode"></el-input>
           <el-image src="http://localhost:9090/verify/getcode" style="width: 80px;height: 30px"  @click=""></el-image>
         </el-form-item >
         <el-form-item label="性别">
@@ -39,9 +39,9 @@
           </div>
         </el-form-item>
         <el-form-item style="margin-right: 100px; text-align: right;">
-          <el-button type="primary" size="small"  autocomplete="off" @click="login">点击注册</el-button>
+          <el-button type="primary" size="small"  autocomplete="off" @click="register">点击注册</el-button>
           <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/login')">返回登录</el-button>
-          <el-button style="margin-left: 210px" type="success" size="small" round @click="checkVerifyCode">验证码检测<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+          <el-button style="margin-left: 210px" type="success" size="small" round @click="checkVerifyCode" v-show="false">验证码检测<i class="el-icon-arrow-right el-icon--right"></i></el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -105,7 +105,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item  label="验证码" style="margin-bottom: 5px;margin-right: 5px;text-align: center;" prop="verify" align="center"  >
-          <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 220px" prefix-icon="el-icon-user" v-model="this.verifyCode"></el-input>
+          <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 220px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>
           <el-image src="http://localhost:9090/verify/getcode" style="width: 70px;height: 30px;margin-left: 10px; "  @click=""></el-image>
         </el-form-item >
         <el-form-item label="性别">
@@ -117,9 +117,9 @@
           </div>
         </el-form-item>
         <el-form-item style="margin-right: 100px; text-align: right;">
-          <el-button type="primary" size="small"  autocomplete="off" @click="login">点击注册</el-button>
+          <el-button type="primary" size="small"  autocomplete="off" @click="register">点击注册</el-button>
           <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/login')">返回登录</el-button>
-          <el-button style="margin-left: 210px" type="success" size="small" round @click="checkVerifyCode">验证码检测<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+          <el-button style="margin-left: 210px" type="success" size="small" round @click="checkVerifyCode" v-show="false">验证码检测<i class="el-icon-arrow-right el-icon--right"></i></el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -145,6 +145,8 @@ export default {
         sex:"",
         role:"",
         bankcard:"",
+        verifyCode:"",
+        verifyResult:"",
       },
       buss: {
         username:"",
@@ -158,6 +160,8 @@ export default {
         bankcard:"",
         idCardImg:"",
         license:"",
+        verifyCode:"",
+        verifyResult:"",
       },
       userRules: {
         username: [
@@ -204,8 +208,8 @@ export default {
         // ],
       },
       registerType:"ROLE_USER",
-      verifyCode:"111",
       verifyCheck:"",
+      verifyResult:"",
       verifyPicture:"http://localhost:9090/verify/getcode",
       uploadUrl:"https://www.imgurl.org/api/v2/upload",
       fileList: [],
@@ -215,13 +219,19 @@ export default {
     }
   },
   methods: {
-    login() {
+    register() {
+      this.checkVerifyCode()
+      console.log(this.user.verifyResult)
       if(this.registerType == "ROLE_USER"){
         this.user.role = this.registerType
         this.$refs['userForm'].validate((valid) => {
           if (valid) {  // 表单校验合法
             if (this.user.password !== this.user.confirmPassword) {
               this.$message.error("两次输入的密码不一致")
+              return false
+            }
+            if (this.user.verifyResult !== "ok") {
+              this.$message.warning("验证码输入错误！")
               return false
             }
             this.request.post("/person/register",this.user).then(res => {
@@ -239,6 +249,10 @@ export default {
           if (valid) {  // 表单校验合法
             if (this.buss.password !== this.buss.confirmPassword) {
               this.$message.error("两次输入的密码不一致")
+              return false
+            }
+            if (this.buss.verifyResult !== "ok") {
+              this.$message.warning("验证码输入错误！")
               return false
             }
             this.request.post("/person/register",this.buss).then(res => {
@@ -269,15 +283,29 @@ export default {
       })
     },
     checkVerifyCode(){
-      // request.get("http://localhost:9090/verify/checkcode?validateCode=hjz1").then(res =>{
-      // })
-      // request.get("http://localhost:9090/verify/checkcode?validateCode=hjz1")
-      // this.getVerifyPicture()
-      console.log(document.cookie.length )
-      this.request.post("/verify/checkcode",this.verifyCode).then(res => {
-            console.log(res)
+
+      if(this.registerType == "ROLE_USER"){
+        axios.get("http://localhost:9090/verify/checkcode?validateCode="+this.user.verifyCode).then(res => {
+          console.log(res.data)
+          if(res.data == "ok"){
+            this.user.verifyResult = "ok"
+          }else{
+            this.user.verifyResult = "Error"
           }
-      )
+        })
+      }
+      else {
+        axios.get("http://localhost:9090/verify/checkcode?validateCode="+this.buss.verifyCode).then(res => {
+          console.log(res.data)
+          if(res.data == "ok"){
+            this.buss.verifyResult = "ok"
+          }else{
+            this.buss.verifyResult = "Error"
+          }
+        })
+      }
+
+
       // axios.get("http://localhost:9090/verify/checkcode")
     },
     getUploadUrl(){

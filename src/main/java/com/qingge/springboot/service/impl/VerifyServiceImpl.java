@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 @Service
 public class VerifyServiceImpl implements IVerifyService {
@@ -16,10 +17,10 @@ public class VerifyServiceImpl implements IVerifyService {
     public String getCode(HttpServletResponse response, HttpServletRequest request) {
         System.out.println("获取验证码");
         response.setContentType("image/jpeg");// 设置相应类型,告诉浏览器输出的内容为图片
-        response.setHeader("Pragma", "No-cache");// 设置响应头信息，告诉浏览器不要缓存此内容
-        response.setHeader("Cache-Control", "no-cache");
+//        response.setHeader("Pragma", "No-cache");// 设置响应头信息，告诉浏览器不要缓存此内容
+//        response.setHeader("Cache-Control", "no-cache");
 //        response.setHeader("Set-Cookie", "name=value;");//设置HttpOnly属性,防止Xss攻击
-        response.setDateHeader("Expire", 0);
+        response.setDateHeader("Expire", 1);
         RandomValidateCode randomValidateCode = new RandomValidateCode();
         try {
             randomValidateCode.getRandcode(request, response,"imagecode");// 输出图片方法
@@ -32,18 +33,30 @@ public class VerifyServiceImpl implements IVerifyService {
     @Override
     public String checkCode(HttpServletRequest request, HttpServletResponse response) {
         String validateCode = request.getParameter("validateCode");
+        String filePath = "/Users/chenlong/Documents/tmpRandomCode/"+"randomCode.txt";
         String code = null;
-        //1:获取cookie里面的验证码信息
-        Cookie[] cookies = request.getCookies();
-        System.out.println(cookies);
-        for (Cookie cookie : cookies) {
-            if ("imagecode".equals(cookie.getName())) {
-                code = cookie.getValue();
-                break;
-            }
+//        //1:获取cookie里面的验证码信息
+//        Cookie[] cookies = request.getCookies();
+//        System.out.println(cookies);
+//        for (Cookie cookie : cookies) {
+//            if ("imagecode".equals(cookie.getName())) {
+//                code = cookie.getValue();
+//                break;
+//            }
+//        }
+//        //1:获取session验证码的信息
+//        String code1 = (String) request.getSession().getAttribute(request.getSession().getId()+"imagecode");
+        File file = new File(filePath);
+        BufferedReader br;
+        try {
+            FileReader fileReader = new FileReader(file);
+            br = new BufferedReader(fileReader);
+            code = br.readLine();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        //1:获取session验证码的信息
-        //String code1 = (String) request.getSession().getAttribute("");
         //2:判断验证码是否正确
         if(!StringUtils.isEmpty(validateCode)){
 //            全部转化为小写

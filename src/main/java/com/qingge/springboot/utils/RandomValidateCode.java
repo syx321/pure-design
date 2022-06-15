@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.util.Random;
 
 public class RandomValidateCode {
@@ -76,7 +76,7 @@ public class RandomValidateCode {
     /**
      * 生成随机图片
      */
-    public void getRandcode(HttpServletRequest request, HttpServletResponse response, String key) {
+    public void getRandcode(HttpServletRequest request, HttpServletResponse response, String key) throws IOException {
 
         // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
         BufferedImage image = new BufferedImage(width, height,BufferedImage.TYPE_INT_BGR);
@@ -93,14 +93,25 @@ public class RandomValidateCode {
         for (int i = 1; i <= stringNum; i++) {
             randomString = drowString(g, randomString, i);
         }
-        //1：将随机生成的验证码放入Cookie中
-        Cookie cookie = new Cookie(key,randomString);
-        response.addCookie(cookie);
+//        //1：将随机生成的验证码放入Cookie中
+//        Cookie cookie = new Cookie(key,randomString);
+//        cookie.setHttpOnly(false);
+//        response.addCookie(cookie);
         //2：将随机生成的验证码放入session中
         String sessionid = request.getSession().getId();
         request.getSession().setAttribute(sessionid+key, randomString);
         System.out.println("*************" + randomString);
-
+        //3:将随机验证码存储在本地
+        String filePath = "/Users/chenlong/Documents/tmpRandomCode/"+"randomCode.txt";
+        FileWriter fileWriter = null;
+        File file = new File(filePath);
+        if (!file.exists())
+        {
+            file.createNewFile();
+        }
+        fileWriter = new FileWriter(file);
+        fileWriter.write(randomString);
+        fileWriter.close();
         //总结：这两种方式都不是很好，
         //（1）：使用cookie的方式，将验证码发送到前台浏览器，不安全！不建议使用。
         //（2）：使用session的方式，虽然能解决验证码不发送到浏览器，安全性较高了，但是如果用户量太大，这样的存储方式会对服务器造成压力，影响服务器的性能。不建议使用。
