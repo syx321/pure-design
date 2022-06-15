@@ -156,6 +156,17 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
                         .eq("user_id", userId)
                         .eq("is_cart", 1)
         );
+        Person person = personMapper.selectOne(
+                new QueryWrapper<Person>()
+                        .eq("user_id", userId)
+        );
+        if (person == null) {
+            return Result.error(Constants.CODE_400, "购物车一键下单失败，无此用户" + userId);
+        }
+        if (purchaseRelationships == null) {
+            return Result.error(Constants.CODE_400, "购物车一键下单失败，购物车为空" + userId);
+        }
+        double cost = 0.0;
         for (PurchaseRelationship purchaseRelationship : purchaseRelationships) {
             purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
             purchaseRelationship.setIsCart(0);
@@ -163,6 +174,15 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
             if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
                 return Result.error(Constants.CODE_400, "购物车一键下单失败" + purchaseRelationship);
             }
+            cost += productMapper.selectOne(
+                    new QueryWrapper<Product>()
+                            .eq("product_id", purchaseRelationship.getProductId())
+            ).getPrice()*purchaseRelationship.getCount();
+        }
+        double currentPoint = person.getShoppingPoints() == null ? 0 : Double.parseDouble(person.getShoppingPoints());
+        person.setShoppingPoints(String.valueOf(currentPoint + cost/100));
+        if (personMapper.updateById(person) == 0) {
+            return Result.error(Constants.CODE_400, "积分添加失败");
         }
         return Result.success("购物车一键下单成功");
     }

@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 13/06/2022 22:05:03
+ Date: 15/06/2022 09:17:37
 */
 
 SET NAMES utf8mb4;
@@ -54,6 +54,13 @@ INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `i
 INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655054559692);
 INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (1, NULL, 2199, NULL, 1655054581063);
 INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655054581066);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (1, NULL, 2199, NULL, 1655221758565);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655221758573);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655221840995);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655221851045);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (1, NULL, 2199, NULL, 1655222714234);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655222714240);
+INSERT INTO `account_change` (`user_id`, `recharge_record`, `consume_record`, `income_record`, `time`) VALUES (2, NULL, NULL, 2199, 1655226495411);
 COMMIT;
 
 -- ----------------------------
@@ -141,7 +148,7 @@ CREATE TABLE `person` (
   `simple_info` varchar(255) CHARACTER SET gbk COLLATE gbk_chinese_ci DEFAULT NULL,
   `wechat` varchar(255) CHARACTER SET gbk DEFAULT NULL,
   `address` varchar(255) CHARACTER SET gbk DEFAULT NULL,
-  `shopping_points` varchar(255) CHARACTER SET gbk DEFAULT NULL COMMENT '购物积分(100减1元)',
+  `shopping_points` int DEFAULT NULL COMMENT '购物积分(100减1元)',
   `balance` double DEFAULT NULL COMMENT '账户余额',
   `level` int DEFAULT NULL COMMENT '卖家等级',
   PRIMARY KEY (`user_id`)
@@ -151,8 +158,8 @@ CREATE TABLE `person` (
 -- Records of person
 -- ----------------------------
 BEGIN;
-INSERT INTO `person` (`user_id`, `username`, `password`, `id_card_img`, `name`, `phone`, `email`, `city`, `sex`, `bank_card`, `role`, `license`, `register_checked`, `avatar`, `simple_info`, `wechat`, `address`, `shopping_points`, `balance`, `level`) VALUES (1, 'admin', '123456', NULL, 'longdengy', '1888000', '123@cc.com', 'Beijing', 1, '12345678', 'ROLE_ADMIN', '证书图片', 1, '头像图片', NULL, 'LL464050079', 'China', '300', 5000, 100);
-INSERT INTO `person` (`user_id`, `username`, `password`, `id_card_img`, `name`, `phone`, `email`, `city`, `sex`, `bank_card`, `role`, `license`, `register_checked`, `avatar`, `simple_info`, `wechat`, `address`, `shopping_points`, `balance`, `level`) VALUES (2, 'ldy', '123456', NULL, 'ldy', '166889', '456@cc.com', 'Qingdao', 1, '1234567', 'ROLE_USER', '证书图片', 1, '头像图片', NULL, 'LL123', 'China', '100', 43492, 10);
+INSERT INTO `person` (`user_id`, `username`, `password`, `id_card_img`, `name`, `phone`, `email`, `city`, `sex`, `bank_card`, `role`, `license`, `register_checked`, `avatar`, `simple_info`, `wechat`, `address`, `shopping_points`, `balance`, `level`) VALUES (1, 'admin', '123456', NULL, 'longdengy', '1888000', '123@cc.com', 'Beijing', 1, '12345678', 'ROLE_ADMIN', '证书图片', 1, '头像图片', NULL, 'LL464050079', 'China', 300, 602, 100);
+INSERT INTO `person` (`user_id`, `username`, `password`, `id_card_img`, `name`, `phone`, `email`, `city`, `sex`, `bank_card`, `role`, `license`, `register_checked`, `avatar`, `simple_info`, `wechat`, `address`, `shopping_points`, `balance`, `level`) VALUES (2, 'ldy', '123456', NULL, 'ldy', '166889', '456@cc.com', 'Qingdao', 1, '1234567', 'ROLE_USER', '证书图片', 1, '头像图片', NULL, 'LL123', 'China', 100, 54487, 10);
 COMMIT;
 
 -- ----------------------------
@@ -176,6 +183,7 @@ CREATE TABLE `product` (
   `favorable_rate` varchar(255) CHARACTER SET gbk DEFAULT NULL COMMENT '好评率',
   `is_enable` tinyint DEFAULT NULL COMMENT '是否上架在售',
   `is_checked` tinyint DEFAULT NULL COMMENT '是否通过审核',
+  `total` double DEFAULT NULL COMMENT '该订单支付总价',
   PRIMARY KEY (`product_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -183,9 +191,9 @@ CREATE TABLE `product` (
 -- Records of product
 -- ----------------------------
 BEGIN;
-INSERT INTO `product` (`product_id`, `business_id`, `name`, `price`, `sort`, `size`, `img`, `stock_num`, `history_sale_num`, `purchase_num`, `score`, `is_delete`, `deal_style`, `favorable_rate`, `is_enable`, `is_checked`) VALUES (1, 2, '手机', 2199, '电子', 4, 'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp', 591, 109, 109, 5, 0, '二手商城', '100', 1, 1);
-INSERT INTO `product` (`product_id`, `business_id`, `name`, `price`, `sort`, `size`, `img`, `stock_num`, `history_sale_num`, `purchase_num`, `score`, `is_delete`, `deal_style`, `favorable_rate`, `is_enable`, `is_checked`) VALUES (2, 2, '电脑', 7899, '电子', 5, 'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp', 999, 50, 50, 5, 0, '线下', '100', 1, 1);
-INSERT INTO `product` (`product_id`, `business_id`, `name`, `price`, `sort`, `size`, `img`, `stock_num`, `history_sale_num`, `purchase_num`, `score`, `is_delete`, `deal_style`, `favorable_rate`, `is_enable`, `is_checked`) VALUES (3, 2, '洗衣机', 9999, '电子', 3, 'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp', 100, 10, 10, 5, 0, '线下', '100', 1, 1);
+INSERT INTO `product` (`product_id`, `business_id`, `name`, `price`, `sort`, `size`, `img`, `stock_num`, `history_sale_num`, `purchase_num`, `score`, `is_delete`, `deal_style`, `favorable_rate`, `is_enable`, `is_checked`, `total`) VALUES (1, 2, '手机', 2199, '电子', 4, 'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp', 589, 111, 111, 5, 0, '二手商城', '100', 1, 1, NULL);
+INSERT INTO `product` (`product_id`, `business_id`, `name`, `price`, `sort`, `size`, `img`, `stock_num`, `history_sale_num`, `purchase_num`, `score`, `is_delete`, `deal_style`, `favorable_rate`, `is_enable`, `is_checked`, `total`) VALUES (2, 2, '电脑', 7899, '电子', 5, 'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp', 999, 50, 50, 5, 0, '线下', '100', 1, 1, NULL);
+INSERT INTO `product` (`product_id`, `business_id`, `name`, `price`, `sort`, `size`, `img`, `stock_num`, `history_sale_num`, `purchase_num`, `score`, `is_delete`, `deal_style`, `favorable_rate`, `is_enable`, `is_checked`, `total`) VALUES (3, 2, '洗衣机', 9999, '电子', 3, 'https://img30.360buyimg.com/babel/s1580x830_jfs/t1/109361/24/22897/74054/621ede58E099d37e3/f12730c81df6046a.jpg!cc_1580x830.webp', 100, 10, 10, 5, 0, '线下', '100', 1, 1, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -207,7 +215,7 @@ CREATE TABLE `purchase_relationship` (
   `is_cart` tinyint DEFAULT NULL COMMENT '是否在购物车',
   `create_time` bigint DEFAULT NULL COMMENT '订单创建时间',
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of purchase_relationship
@@ -217,14 +225,16 @@ INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `busin
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (2, 1, 2, 2, '电脑很好', 2, '商家很好', 'FINISHED', 1654952273060, 5, '客户态度好', 0, 1654952273060);
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (3, 1, 3, 2, '洗衣机很好', 1, '商家服务好', 'FINISHED', 1655031727771, 4, '顾客态度好', 0, 1654952273060);
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (4, 1, 2, 2, '电脑还是很好', 1, '商家很好', 'FINISHED', 1655038659051, 5, '爱顾客', 0, 1655031727771);
-INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (5, 1, 1, 2, NULL, 1, NULL, 'RECEIVED', 1655053482082, NULL, NULL, 0, 1655053423169);
+INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (5, 1, 1, 2, '购物体验超棒的', 1, '商家超好', 'FINISHED', 1655053482082, 5, '顾客很好\n', 0, 1655053423169);
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (6, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655053711660);
-INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (8, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655054402151);
-INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (9, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655054470945);
-INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (10, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655054521987);
+INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (8, 1, 1, 2, NULL, 1, NULL, 'RECEIVED', 1655226495411, NULL, NULL, 0, 1655054402151);
+INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (9, 1, 1, 2, NULL, 1, NULL, 'RECEIVED', 1655221851045, NULL, NULL, 0, 1655054470945);
+INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (10, 1, 1, 2, NULL, 1, NULL, 'RECEIVED', 1655221840995, NULL, NULL, 0, 1655054521987);
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (11, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655054550725);
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (12, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655054559698);
 INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (13, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655054581070);
+INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (14, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655221758586);
+INSERT INTO `purchase_relationship` (`order_id`, `user_id`, `product_id`, `business_id`, `user_evaluate`, `count`, `seller_attitude`, `deliver_state`, `received_time`, `score`, `seller_evaluate`, `is_cart`, `create_time`) VALUES (15, 1, 1, 2, NULL, 1, NULL, 'WAIT_FOR_RECEIVING', NULL, NULL, NULL, 0, 1655222714248);
 COMMIT;
 
 -- ----------------------------
