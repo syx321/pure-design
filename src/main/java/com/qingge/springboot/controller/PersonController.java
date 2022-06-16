@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.config.AuthAccess;
 import com.qingge.springboot.controller.dto.PersonDTO;
+import com.qingge.springboot.controller.dto.PersonPasswordDTO;
 import com.qingge.springboot.controller.dto.UserDTO;
+import com.qingge.springboot.controller.dto.UserPasswordDTO;
 import com.qingge.springboot.entity.User;
 import com.qingge.springboot.service.IUserService;
 import com.qingge.springboot.utils.ImageUtils;
@@ -65,17 +67,26 @@ public class PersonController {
     }
 
     @GetMapping("/username/{username}")
+    @AuthAccess
     public Result findByUsername(@PathVariable String username) {
         QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         return Result.success(personService.getOne(queryWrapper));
     }
-    //    // 新增或者更新
-//    @PostMapping
-//    public Result save(@RequestBody Person person) {
-//        personService.saveOrUpdate(person);
-//        return Result.success();
-//    }
+    // 新增或者更新
+    @PostMapping
+    @AuthAccess
+    public Result save(@RequestBody Person person) {
+        if (person.getUserId() == null && person.getPassword() == null) {  // 新增用户默认密码
+            person.setPassword("123");
+        }
+        return Result.success(personService.saveUser(person));
+    }
+    @PostMapping("/password")
+    @AuthAccess
+    public Result password(@RequestBody PersonPasswordDTO personPasswordDTO) {
+        return Result.success(personService.updatePassword(personPasswordDTO));
+    }
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         personService.removeById(id);

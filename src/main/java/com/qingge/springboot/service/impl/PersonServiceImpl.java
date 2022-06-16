@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.controller.dto.PersonDTO;
 import com.qingge.springboot.controller.dto.PersonPasswordDTO;
-import com.qingge.springboot.controller.dto.UserDTO;
-import com.qingge.springboot.controller.dto.UserPasswordDTO;
 import com.qingge.springboot.entity.Menu;
 import com.qingge.springboot.entity.Person;
 import com.qingge.springboot.entity.User;
@@ -37,6 +35,8 @@ import java.util.List;
 @Service
 public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> implements IPersonService {
 
+    @Resource
+    private PersonMapper personMapper;
     @Resource
     private RoleMapper roleMapper;
     @Resource
@@ -75,10 +75,24 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         }
         return person;
     }
-
+    public boolean saveUser(Person person) {
+        if(person.getUserId() == null){
+            return save(person);
+        }else {
+            return updateById(person);
+        }
+//        return saveOrUpdate(user);
+    }
     @Override
-    public void updatePassword(PersonPasswordDTO personPasswordDTO) {
-
+    public boolean updatePassword(PersonPasswordDTO personPasswordDTO) {
+        int update = personMapper.updatePassword(personPasswordDTO);
+        if(update == 1){
+            return true;
+        }
+        if (update < 1) {
+            throw new ServiceException(Constants.CODE_600, "密码错误");
+        }
+        return false;
     }
 
     @Override

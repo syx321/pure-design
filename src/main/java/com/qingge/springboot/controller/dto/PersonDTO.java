@@ -19,6 +19,8 @@ public class PersonDTO {
 
     private String email;
 
+    private String wechat;
+
     private String city;
 
     private Integer sex;
