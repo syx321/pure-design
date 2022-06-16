@@ -1,6 +1,7 @@
 package com.qingge.springboot.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.controller.dto.PersonPasswordDTO;
 import com.qingge.springboot.controller.dto.UserPasswordDTO;
 import com.qingge.springboot.entity.Person;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -18,10 +19,11 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface PersonMapper extends BaseMapper<Person> {
     @Update("update person set password = #{newPassword} where username = #{username} and password = #{password}")
-    int updatePassword(UserPasswordDTO userPasswordDTO);
+    int updatePassword(PersonPasswordDTO personPasswordDTO);
 
     Page<User> findPage(Page<Person> page,
                         @Param("username") String username,
                         @Param("email") String email,
                         @Param("address") String address);
+
 }

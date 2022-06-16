@@ -59,7 +59,8 @@ public class Person implements Serializable {
       private boolean registerChecked;
 
       @ApiModelProperty("image转二进制")
-      private String avatar;
+      @TableField("avatar")
+      private String avatarUrl;
 
     private String simpleInfo;
 

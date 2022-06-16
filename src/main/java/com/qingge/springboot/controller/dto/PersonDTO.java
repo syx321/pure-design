@@ -1,9 +1,14 @@
 package com.qingge.springboot.controller.dto;
 
+import com.qingge.springboot.entity.Menu;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class PersonDTO {
+    private Integer id;
+
     private String username;
 
     private String password;
@@ -26,11 +31,15 @@ public class PersonDTO {
 
     private String license;//商家营业执照img转二进制存储
 
-    private String avatar;//头像转二进制
+    private String avatarUrl;//头像转二进制
 
     private boolean registerChecked;
 
     private String simpleInfo;
 
     private String address;
+
+    private List<Menu> menus;
+
+    private String token;
 }

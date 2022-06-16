@@ -7,6 +7,8 @@ import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.config.AuthAccess;
 import com.qingge.springboot.controller.dto.PersonDTO;
 import com.qingge.springboot.controller.dto.UserDTO;
+import com.qingge.springboot.entity.User;
+import com.qingge.springboot.service.IUserService;
 import com.qingge.springboot.utils.ImageUtils;
 import com.qingge.springboot.utils.MultiToBase64;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +41,8 @@ public class PersonController {
 
 
     //用户注册接口 ： 普通用户、商家
-    @AuthAccess
     @PostMapping("/register")
+    @AuthAccess
     public Result register(@RequestBody PersonDTO personDTO) {
         String username = personDTO.getUsername();
         String password = personDTO.getPassword();
@@ -50,32 +52,30 @@ public class PersonController {
         return Result.success(personService.register(personDTO));
     }
 
+    @PostMapping("/login")
+    @AuthAccess
+    public Result login(@RequestBody PersonDTO personDTO) {
+        String username = personDTO.getUsername();
+        String password = personDTO.getPassword();
+        if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+            return Result.error(Constants.CODE_400, "参数错误");
+        }
+        PersonDTO dto = personService.login(personDTO);
+        return Result.success(dto);
+    }
 
+    @GetMapping("/username/{username}")
+    public Result findByUsername(@PathVariable String username) {
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        return Result.success(personService.getOne(queryWrapper));
+    }
     //    // 新增或者更新
 //    @PostMapping
 //    public Result save(@RequestBody Person person) {
 //        personService.saveOrUpdate(person);
 //        return Result.success();
 //    }
-    @PostMapping("/encode")
-    @AuthAccess
-    public String pictureEncoder(MultipartFile file){
-        MultiToBase64 multiToBase64 = new MultiToBase64();
-        try {
-            String encodeStr = multiToBase64.getBase64String(file);
-            return encodeStr;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Encode ERROR";
-        }
-
-    }
-    @PostMapping("/decode")
-    @AuthAccess
-    public MultipartFile pictureDecoder(String baseStr){
-        ImageUtils imageUtils = new ImageUtils();
-        return imageUtils.base64ToMultipartFile(baseStr);
-    }
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         personService.removeById(id);
@@ -105,6 +105,24 @@ public class PersonController {
         queryWrapper.orderByDesc("id");
         return Result.success(personService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+    @PostMapping("/encode")
+    @AuthAccess
+    public String pictureEncoder(MultipartFile file){
+        MultiToBase64 multiToBase64 = new MultiToBase64();
+        try {
+            String encodeStr = multiToBase64.getBase64String(file);
+            return encodeStr;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Encode ERROR";
+        }
 
+    }
+    @PostMapping("/decode")
+    @AuthAccess
+    public MultipartFile pictureDecoder(String baseStr){
+        ImageUtils imageUtils = new ImageUtils();
+        return imageUtils.base64ToMultipartFile(baseStr);
+    }
 }
 

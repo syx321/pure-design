@@ -9,13 +9,22 @@ import com.qingge.springboot.controller.dto.PersonDTO;
 import com.qingge.springboot.controller.dto.PersonPasswordDTO;
 import com.qingge.springboot.controller.dto.UserDTO;
 import com.qingge.springboot.controller.dto.UserPasswordDTO;
+import com.qingge.springboot.entity.Menu;
 import com.qingge.springboot.entity.Person;
 import com.qingge.springboot.entity.User;
 import com.qingge.springboot.exception.ServiceException;
 import com.qingge.springboot.mapper.PersonMapper;
+import com.qingge.springboot.mapper.RoleMapper;
+import com.qingge.springboot.mapper.RoleMenuMapper;
+import com.qingge.springboot.service.IMenuService;
 import com.qingge.springboot.service.IPersonService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qingge.springboot.utils.TokenUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -28,11 +37,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> implements IPersonService {
 
+    @Resource
+    private RoleMapper roleMapper;
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
+    @Resource
+    private IMenuService menuService;
     private static final Log LOG = Log.get();
     @Override
     public PersonDTO login(PersonDTO personDTO) {
+        Person one = getUserInfo(personDTO);
+        if (one != null) {
+            BeanUtil.copyProperties(one, personDTO, true);
+            // 设置token
+            String token = TokenUtils.genToken(one.getUserId().toString(), one.getPassword());
+            personDTO.setToken(token);
 
-        return null;
+            String role = one.getRole(); // ROLE_ADMIN
+            // 设置用户的菜单列表
+            List<Menu> roleMenus = getRoleMenus(role);
+            personDTO.setMenus(roleMenus);
+            return personDTO;
+        } else {
+            throw new ServiceException(Constants.CODE_600, "用户名或密码错误");
+        }
     }
 
     @Override
@@ -70,5 +98,30 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
             throw new ServiceException(Constants.CODE_500, "系统错误");
         }
         return one;
+    }
+    /**
+     * 获取当前角色的菜单列表
+     * @param roleFlag
+     * @return
+     */
+    private List<Menu> getRoleMenus(String roleFlag) {
+        Integer roleId = roleMapper.selectByFlag(roleFlag);
+        // 当前角色的所有菜单id集合
+        List<Integer> menuIds = roleMenuMapper.selectByRoleId(roleId);
+
+        // 查出系统所有的菜单(树形)
+        List<Menu> menus = menuService.findMenus("");
+        // new一个最后筛选完成之后的list
+        List<Menu> roleMenus = new ArrayList<>();
+        // 筛选当前用户角色的菜单
+        for (Menu menu : menus) {
+            if (menuIds.contains(menu.getId())) {
+                roleMenus.add(menu);
+            }
+            List<Menu> children = menu.getChildren();
+            // removeIf()  移除 children 里面不在 menuIds集合中的 元素
+            children.removeIf(child -> !menuIds.contains(child.getId()));
+        }
+        return roleMenus;
     }
 }

@@ -96,18 +96,23 @@
               :on-preview="handleIDPreview"
               :on-remove="handleRemove"
               :before-remove="beforeRemove"
+              :on-exceed="handleExceed"
               multiple
               :limit="1"
-              :on-exceed="handleExceed"
               :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">身份证，只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
-        </el-form-item>
-        <el-form-item  label="验证码" style="margin-bottom: 5px;margin-right: 5px;text-align: center;" prop="verify" align="center"  >
-          <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 220px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>
-          <el-image src="http://localhost:9090/verify/getcode" style="width: 70px;height: 30px;margin-left: 10px; "  @click=""></el-image>
+<!--          <el-input style="margin: 5px 0;width: 220px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>-->
+<!--          <el-image src=-->
+<!--        </el-form-item>-->
+<!--        <el-form-item  label="验证码" style="margin-bottom: 5px;margin-right: 5px;text-align: center;" prop="verify" align="center"  >-->
+<!--          <el-input placeholder="请输入正确的验证码" size="sma"http://localhost:9090/verify/getcode" style="width: 70px;height: 30px;margin-left: 10px; "  @click=""></el-image>-->
         </el-form-item >
+          <el-form-item  label="验证码" style="margin-bottom: 15px;margin-right: 5px;text-align: center;" prop="verify" align="center">
+            <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 224px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>
+            <el-image src="http://localhost:9090/verify/getcode" style="width: 80px;height: 30px"  @click=""></el-image>
+          </el-form-item >
         <el-form-item label="性别">
           <div>
             <el-radio-group v-model="buss.sex" size="medium" >
@@ -329,9 +334,9 @@ export default {
       console.log(this.buss.license)
     },
     handleRemove(file, fileList) {
-      // console.log(file, fileList);
-      // this.license = file.response.data.url
-      // console.log("license"+this.license)
+      console.log(file, fileList);
+      this.license = file.response.data.url
+      console.log("license"+this.license)
     },
     handleLicensePreview(file) {
       console.log(file);
