@@ -2,14 +2,12 @@ package com.qingge.springboot.controller;
 
 import com.qingge.springboot.config.AuthAccess;
 import com.qingge.springboot.service.IVerifyService;
-import com.qingge.springboot.service.impl.VerifyServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//@CrossOrigin("http://localhost:8080/register")
 @RestController
 @RequestMapping("/verify")
 public class VerifyController {

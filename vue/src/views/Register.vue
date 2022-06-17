@@ -103,11 +103,6 @@
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">身份证，只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
-<!--          <el-input style="margin: 5px 0;width: 220px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>-->
-<!--          <el-image src=-->
-<!--        </el-form-item>-->
-<!--        <el-form-item  label="验证码" style="margin-bottom: 5px;margin-right: 5px;text-align: center;" prop="verify" align="center"  >-->
-<!--          <el-input placeholder="请输入正确的验证码" size="sma"http://localhost:9090/verify/getcode" style="width: 70px;height: 30px;margin-left: 10px; "  @click=""></el-image>-->
         </el-form-item >
           <el-form-item  label="验证码" style="margin-bottom: 15px;margin-right: 5px;text-align: center;" prop="verify" align="center">
             <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 224px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>
@@ -185,10 +180,6 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { min: 1, max: 11, message: '长度在 1 到 11 个字符', trigger: 'blur' }
         ],
-        // bankcard: [
-        //   { required: true, message: '请输入银行账号', trigger: 'blur' },
-        //   { min: 1, max: 18, message: '长度在 1 到 18 个字符', trigger: 'blur' }
-        // ],
       },
       bussRules: {
         username: [
@@ -207,10 +198,6 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { min: 1, max: 11, message: '长度在 1 到 11 个字符', trigger: 'blur' }
         ],
-        // bankcard: [
-        //   { required: true, message: '请输入银行账号', trigger: 'blur' },
-        //   { min: 1, max: 18, message: '长度在 1 到 18 个字符', trigger: 'blur' }
-        // ],
       },
       registerType:"ROLE_USER",
       verifyCheck:"",
@@ -306,9 +293,6 @@ export default {
           }
         })
       }
-
-
-      // axios.get("http://localhost:9090/verify/checkcode")
     },
     getUploadUrl(){
       return this.getUploadUrl()+""
