@@ -64,11 +64,6 @@ export default {
               }else {
                 this.$message.error("未取得任何权限")
               }
-              // if (res.data.role === 'ROLE_USER') {
-              //   this.$router.push("/front/home")
-              // } else {
-              //   this.$router.push("/home")
-              // }
             } else {
               this.$message.error(res.msg)
             }

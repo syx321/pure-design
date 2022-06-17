@@ -35,17 +35,6 @@ public class VerifyServiceImpl implements IVerifyService {
         String validateCode = request.getParameter("validateCode");
         String filePath = "/Users/chenlong/Documents/tmpRandomCode/"+"randomCode.txt";
         String code = null;
-//        //1:获取cookie里面的验证码信息
-//        Cookie[] cookies = request.getCookies();
-//        System.out.println(cookies);
-//        for (Cookie cookie : cookies) {
-//            if ("imagecode".equals(cookie.getName())) {
-//                code = cookie.getValue();
-//                break;
-//            }
-//        }
-//        //1:获取session验证码的信息
-//        String code1 = (String) request.getSession().getAttribute(request.getSession().getId()+"imagecode");
         File file = new File(filePath);
         BufferedReader br;
         try {

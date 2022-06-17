@@ -284,14 +284,12 @@ export default {
     },
     getVerifyPicture(){
       axios.get("http://localhost:9090/verify/getcode").then(res =>{
-        console.log(res.data)
       })
     },
     checkVerifyCode(){
 
       if(this.registerType == "ROLE_USER"){
         axios.get("http://localhost:9090/verify/checkcode?validateCode="+this.user.verifyCode).then(res => {
-          console.log(res.data)
           if(res.data == "ok"){
             this.user.verifyResult = "ok"
           }else{
@@ -301,7 +299,6 @@ export default {
       }
       else {
         axios.get("http://localhost:9090/verify/checkcode?validateCode="+this.buss.verifyCode).then(res => {
-          console.log(res.data)
           if(res.data == "ok"){
             this.buss.verifyResult = "ok"
           }else{
@@ -317,36 +314,25 @@ export default {
       return this.getUploadUrl()+""
     },
     handleChange(file,fileList){
-      console.log(fileList)
       this.license = file.response.data.url
-      console.log(this.license)
     },
     IDEncode(file){
 
       axios.post("http://localhost:9090/person/encode",file).then(res =>{
         this.idCardB64 = res
-        console.log(this.idCardB64)
       })
     },
     handleSuccess(response,file,fileList){
-      console.log(response)
       this.buss.license = response.data.url
-      console.log(this.buss.license)
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
       this.license = file.response.data.url
-      console.log("license"+this.license)
     },
     handleLicensePreview(file) {
-      console.log(file);
       this.buss.license = file.response.data.url.toString()
-      console.log(this.buss.license)
     },
     handleIDPreview(file) {
-      console.log(file);
       this.buss.idCardImg = file.response.data.url.toString()
-      console.log(this.buss.idCardImg)
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
