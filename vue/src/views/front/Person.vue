@@ -3,25 +3,25 @@
     <el-form label-width="80px" size="small">
       <el-upload
           class="avatar-uploader"
-          :action="'http://' + serverIp +':9090/file/upload'"
+          action="https://www.imgurl.org/api/v2/upload"
           :show-file-list="false"
+          :data="uploadData"
           :on-success="handleAvatarSuccess"
       >
         <img v-if="form.avatarUrl" :src="form.avatarUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
-
       <el-form-item label="用户名">
         <el-input v-model="form.username" disabled autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="昵称">
-        <el-input v-model="form.nickname" autocomplete="off"></el-input>
+      <el-form-item label="个人介绍">
+        <el-input v-model="form.simpleInfo" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="邮箱">
         <el-input v-model="form.email" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="电话">
-        <el-input v-model="form.phone" autocomplete="off"></el-input>
+      <el-form-item label="微信">
+        <el-input v-model="form.wechat" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="地址">
         <el-input type="textarea" v-model="form.address" autocomplete="off"></el-input>
@@ -41,7 +41,14 @@ export default {
   data() {
     return {
       serverIp: serverIp,
-      form: {},
+      form: {
+        avatarUrl:"https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg",
+        username:"",
+        simpleInfo:"",
+        email:"",
+        wechat:"",
+        address:"",
+      },
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
     }
   },
@@ -53,10 +60,10 @@ export default {
   },
   methods: {
     async getUser() {
-      return (await this.request.get("/user/username/" + this.user.username)).data
+      return (await this.request.get("/person/username/" + this.user.username)).data
     },
     save() {
-      this.request.post("/user", this.form).then(res => {
+      this.request.post("/person", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
 
@@ -75,7 +82,15 @@ export default {
       })
     },
     handleAvatarSuccess(res) {
-      this.form.avatarUrl = res
+      this.form.avatarUrl = res.data.url
+    }
+  },
+  computed:{
+    uploadData() {
+      return {
+        uid:"d2a4f678d208b0ec691124ecfa8697d1",
+        token:"00bc8c4b60d12f9cbe6dac9281110fba"
+      }
     }
   }
 }

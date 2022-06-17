@@ -1,7 +1,11 @@
 package com.qingge.springboot.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.controller.dto.PersonDTO;
+import com.qingge.springboot.controller.dto.PersonPasswordDTO;
 import com.qingge.springboot.entity.Person;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingge.springboot.entity.User;
 
 /**
  * <p>
@@ -13,4 +17,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPersonService extends IService<Person> {
 
+    boolean saveUser(Person person);
+
+    PersonDTO login(PersonDTO personDTO);
+
+    Person register(PersonDTO personDTO);
+
+    boolean updatePassword(PersonPasswordDTO personPasswordDTO);
+
+    Page<User> findPage(Page<Person> objectPage, String username, String email, String address);
 }

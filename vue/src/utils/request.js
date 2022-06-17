@@ -41,7 +41,9 @@ request.interceptors.response.use(
             //     message: res.msg,
             //     type: 'error'
             // });
-            router.push("/login")
+            // console.log("401401401401401401401401401")
+            //
+            // router.push("/login")
         }
         return res;
     },
