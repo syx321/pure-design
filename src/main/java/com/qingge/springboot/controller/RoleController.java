@@ -60,7 +60,8 @@ public class RoleController {
 
     /**
      * 绑定角色和菜单的关系
-     * @param roleId 角色id
+     *
+     * @param roleId  角色id
      * @param menuIds 菜单id数组
      * @return
      */
@@ -72,7 +73,7 @@ public class RoleController {
 
     @GetMapping("/roleMenu/{roleId}")
     public Result getRoleMenu(@PathVariable Integer roleId) {
-        return Result.success( roleService.getRoleMenu(roleId));
+        return Result.success(roleService.getRoleMenu(roleId));
     }
 
 }

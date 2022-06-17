@@ -60,11 +60,20 @@ public class EchartsController {
             Date createTime = user.getCreateTime();
             Quarter quarter = DateUtil.quarterEnum(createTime);
             switch (quarter) {
-                case Q1: q1 += 1; break;
-                case Q2: q2 += 1; break;
-                case Q3: q3 += 1; break;
-                case Q4: q4 += 1; break;
-                default: break;
+                case Q1:
+                    q1 += 1;
+                    break;
+                case Q2:
+                    q2 += 1;
+                    break;
+                case Q3:
+                    q3 += 1;
+                    break;
+                case Q4:
+                    q4 += 1;
+                    break;
+                default:
+                    break;
             }
         }
         return Result.success(CollUtil.newArrayList(q1, q2, q3, q4));

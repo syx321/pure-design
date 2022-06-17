@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.entity.User;
 import com.qingge.springboot.service.IUserService;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author 青哥哥
@@ -73,7 +74,7 @@ public class CourseController {
     @GetMapping("/page")
     public Result findPage(@RequestParam String name,
                            @RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
+                           @RequestParam Integer pageSize) {
 //        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.orderByDesc("id");
 //        Page<Course> page = courseService.page(new Page<>(pageNum, pageSize), queryWrapper);

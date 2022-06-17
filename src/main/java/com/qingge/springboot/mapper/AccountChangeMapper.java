@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author longdengyu
@@ -15,5 +15,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface AccountChangeMapper extends BaseMapper<AccountChange> {
     Page<AccountChange> findPage(Page<AccountChange> page,
-                           @Param("userId") String userId);
+                                 @Param("userId") String userId);
 }

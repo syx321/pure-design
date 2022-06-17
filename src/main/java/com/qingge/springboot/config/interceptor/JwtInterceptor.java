@@ -28,7 +28,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         String token = request.getHeader("token");
 
         // 如果不是映射到方法直接通过
-        if(!(handler instanceof HandlerMethod)){
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         } else {
             HandlerMethod h = (HandlerMethod) handler;
