@@ -148,7 +148,40 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         }
         return this.page(personPage,queryWrapper);
     }
+    @Override
+    public IPage<Person> findBusinessPage(Integer pageNum, Integer pageSize, String username, String email, String address) {
+        IPage<Person> personPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("role","ROLE_BUSINESS");
+        if(!"".equals(username)){
+            queryWrapper.like("username",username);//（查询字段，查询字符）
+        }
+        if(!"".equals(email)){
+            queryWrapper.like("email",email);//（查询字段，查询字符）
+        }
+        if(!"".equals(address)){
+            queryWrapper.like("address",address);//（查询字段，查询字符）
+        }
+        return this.page(personPage,queryWrapper);
+    }
 
+    @Override
+    public IPage<Person> findUnCheckBusinessPage(Integer pageNum, Integer pageSize, String username, String email, String address) {
+        IPage<Person> personPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("role","ROLE_BUSINESS");
+        queryWrapper.like("register_checked","0");
+        if(!"".equals(username)){
+            queryWrapper.like("username",username);//（查询字段，查询字符）
+        }
+        if(!"".equals(email)){
+            queryWrapper.like("email",email);//（查询字段，查询字符）
+        }
+        if(!"".equals(address)){
+            queryWrapper.like("address",address);//（查询字段，查询字符）
+        }
+        return this.page(personPage,queryWrapper);
+    }
     @Override
     public boolean updateRegisterToPass(Integer id) {
         Person person = new Person();

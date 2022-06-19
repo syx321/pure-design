@@ -81,8 +81,7 @@ public class PersonController {
     @DeleteMapping("/{id}")
     @AuthAccess
     public Result delete(@PathVariable Integer id) {
-        personService.removeById(id);
-        return Result.success();
+        return Result.success(personService.removeById(id));
     }
 
     @PostMapping("/del/batch")
@@ -127,6 +126,26 @@ public class PersonController {
                            @RequestParam(defaultValue = "") String email,
                            @RequestParam(defaultValue = "") String address) {
         return Result.success(personService.findUnCheckUserPage(pageNum,pageSize,username,email,address));
+    }
+
+    @GetMapping("/pageBusiness")
+    @AuthAccess
+    public Result findBusinessPage(@RequestParam Integer pageNum,
+                                   @RequestParam Integer pageSize,
+                                   @RequestParam(defaultValue = "") String username,
+                                   @RequestParam(defaultValue = "") String email,
+                                   @RequestParam(defaultValue = "") String address) {
+        return Result.success(personService.findBusinessPage(pageNum,pageSize,username,email,address));
+    }
+
+    @GetMapping("/pageUncheckBusiness")
+    @AuthAccess
+    public Result findUncheckBusinessPage(@RequestParam Integer pageNum,
+                                          @RequestParam Integer pageSize,
+                                          @RequestParam(defaultValue = "") String username,
+                                          @RequestParam(defaultValue = "") String email,
+                                          @RequestParam(defaultValue = "") String address) {
+        return Result.success(personService.findUnCheckBusinessPage(pageNum,pageSize,username,email,address));
     }
 
     @GetMapping("/updateCheckPass/{id}")

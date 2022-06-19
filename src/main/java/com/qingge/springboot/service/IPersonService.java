@@ -33,6 +33,10 @@ public interface IPersonService extends IService<Person> {
 
     IPage<Person> findUnCheckUserPage(Integer pageNum,Integer pageSize, String username, String email, String address);
 
+    IPage<Person> findBusinessPage(Integer pageNum,Integer pageSize, String username, String email, String address);
+
+    IPage<Person> findUnCheckBusinessPage(Integer pageNum,Integer pageSize, String username, String email, String address);
+
     boolean updateRegisterToPass(Integer id);
 
     boolean updateRegisterToFail(Integer id);

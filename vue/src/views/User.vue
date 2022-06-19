@@ -28,8 +28,8 @@
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="userId" label="ID" width="80"></el-table-column>
+      <el-table-column type="selection" width="45px"></el-table-column>
+      <el-table-column prop="userId" label="ID" width="40"></el-table-column>
       <el-table-column prop="username" label="用户名" width="140"></el-table-column>
       <el-table-column prop="role" label="角色">
         <template slot-scope="scope">
@@ -61,7 +61,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="您确定删除吗？"
-              @confirm="del(scope.row.id)"
+              @confirm="del(scope.row)"
           >
             <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
           </el-popconfirm>
@@ -230,8 +230,8 @@ export default {
       this.form = JSON.parse(JSON.stringify(row))
       this.dialogFormVisible = true
     },
-    del(id) {
-      this.request.delete("/person/" + id).then(res => {
+    del(row) {
+      this.request.delete("/person/" + row.userId).then(res => {
         if (res.code === '200') {
           this.$message.success("删除成功")
           this.refresh()
