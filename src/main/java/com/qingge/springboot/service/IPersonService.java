@@ -1,5 +1,7 @@
 package com.qingge.springboot.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.controller.dto.PersonDTO;
 import com.qingge.springboot.controller.dto.PersonPasswordDTO;
@@ -25,5 +27,14 @@ public interface IPersonService extends IService<Person> {
 
     boolean updatePassword(PersonPasswordDTO personPasswordDTO);
 
-    Page<User> findPage(Page<Person> objectPage, String username, String email, String address);
+    IPage<Person> findPage(Integer pageNum,Integer pageSize, String username, String email, String address);
+
+    IPage<Person> findUserPage(Integer pageNum,Integer pageSize, String username, String email, String address);
+
+    IPage<Person> findUnCheckUserPage(Integer pageNum,Integer pageSize, String username, String email, String address);
+
+    boolean updateRegisterToPass(Integer id);
+
+    boolean updateRegisterToFail(Integer id);
+
 }

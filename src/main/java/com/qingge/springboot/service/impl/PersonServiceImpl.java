@@ -3,6 +3,7 @@ package com.qingge.springboot.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.controller.dto.PersonDTO;
@@ -95,10 +96,83 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         return false;
     }
 
+
+
     @Override
-    public Page<User> findPage(Page<Person> objectPage, String username, String email, String address) {
-        return null;
+    public IPage<Person> findPage(Integer pageNum,Integer pageSize,String username, String email, String address) {
+        IPage<Person> personPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        if(!"".equals(username)){
+            queryWrapper.like("username",username);//（查询字段，查询字符）
+        }
+        if(!"".equals(email)){
+            queryWrapper.like("email",email);//（查询字段，查询字符）
+        }
+        if(!"".equals(address)){
+            queryWrapper.like("address",address);//（查询字段，查询字符）
+        }
+        return this.page(personPage,queryWrapper);
     }
+
+    @Override
+    public IPage<Person> findUserPage(Integer pageNum, Integer pageSize, String username, String email, String address) {
+        IPage<Person> personPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("role","ROLE_USER");
+        if(!"".equals(username)){
+            queryWrapper.like("username",username);//（查询字段，查询字符）
+        }
+        if(!"".equals(email)){
+            queryWrapper.like("email",email);//（查询字段，查询字符）
+        }
+        if(!"".equals(address)){
+            queryWrapper.like("address",address);//（查询字段，查询字符）
+        }
+        return this.page(personPage,queryWrapper);
+    }
+
+    @Override
+    public IPage<Person> findUnCheckUserPage(Integer pageNum, Integer pageSize, String username, String email, String address) {
+        IPage<Person> personPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("role","ROLE_USER");
+        queryWrapper.like("register_checked","0");
+        if(!"".equals(username)){
+            queryWrapper.like("username",username);//（查询字段，查询字符）
+        }
+        if(!"".equals(email)){
+            queryWrapper.like("email",email);//（查询字段，查询字符）
+        }
+        if(!"".equals(address)){
+            queryWrapper.like("address",address);//（查询字段，查询字符）
+        }
+        return this.page(personPage,queryWrapper);
+    }
+
+    @Override
+    public boolean updateRegisterToPass(Integer id) {
+        Person person = new Person();
+        person.setUserId(id);
+        person.setRegisterChecked(true);
+        int i = personMapper.updateById(person);
+        if(i == 1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateRegisterToFail(Integer id) {
+        Person person = new Person();
+        person.setUserId(id);
+        person.setRegisterChecked(false);
+        int i = personMapper.updateById(person);
+        if(i == 1){
+            return true;
+        }else {
+            return false;
+        }    }
 
     private Person getUserInfo(PersonDTO personDTO) {
         QueryWrapper<Person> queryWrapper = new QueryWrapper<>();

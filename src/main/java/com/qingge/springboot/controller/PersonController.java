@@ -79,15 +79,16 @@ public class PersonController {
         return Result.success(personService.updatePassword(personPasswordDTO));
     }
     @DeleteMapping("/{id}")
+    @AuthAccess
     public Result delete(@PathVariable Integer id) {
         personService.removeById(id);
         return Result.success();
     }
 
     @PostMapping("/del/batch")
+    @AuthAccess
     public Result deleteBatch(@RequestBody List<Integer> ids) {
-        personService.removeByIds(ids);
-        return Result.success();
+        return Result.success(personService.removeByIds(ids));
     }
 
     @GetMapping
@@ -101,12 +102,45 @@ public class PersonController {
     }
 
     @GetMapping("/page")
+    @AuthAccess
     public Result findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
-        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        return Result.success(personService.page(new Page<>(pageNum, pageSize), queryWrapper));
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username,
+                           @RequestParam(defaultValue = "") String email,
+                           @RequestParam(defaultValue = "") String address) {
+        return Result.success(personService.findPage(pageNum,pageSize,username,email,address));
     }
+    @GetMapping("/pageUser")
+    @AuthAccess
+    public Result findUserPage(@RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username,
+                           @RequestParam(defaultValue = "") String email,
+                           @RequestParam(defaultValue = "") String address) {
+        return Result.success(personService.findUserPage(pageNum,pageSize,username,email,address));
+    }
+    @GetMapping("/pageUncheckUser")
+    @AuthAccess
+    public Result findUncheckUserPage(@RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize,
+                           @RequestParam(defaultValue = "") String username,
+                           @RequestParam(defaultValue = "") String email,
+                           @RequestParam(defaultValue = "") String address) {
+        return Result.success(personService.findUnCheckUserPage(pageNum,pageSize,username,email,address));
+    }
+
+    @GetMapping("/updateCheckPass/{id}")
+    @AuthAccess
+    public Result updateRegisterToPass(@PathVariable Integer id){
+        return Result.success(personService.updateRegisterToPass(id));
+    }
+
+    @GetMapping("/updateCheckFail/{id}")
+    @AuthAccess
+    public Result updateRegisterToFail(@PathVariable Integer id){
+        return Result.success(personService.updateRegisterToFail(id));
+    }
+
 
 }
 
