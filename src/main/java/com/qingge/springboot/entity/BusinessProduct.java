@@ -1,7 +1,9 @@
 package com.qingge.springboot.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -9,7 +11,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author longdengyu
@@ -17,7 +19,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-  @TableName("business_product")
+@TableName("business_product")
 @ApiModel(value = "BusinessProduct对象", description = "")
 public class BusinessProduct implements Serializable {
 
@@ -25,8 +27,8 @@ public class BusinessProduct implements Serializable {
 
     private Integer userId;
 
-      @ApiModelProperty("商家持有的物品")
-      private Integer productId;
+    @ApiModelProperty("商家持有的物品")
+    private Integer productId;
 
 
 }

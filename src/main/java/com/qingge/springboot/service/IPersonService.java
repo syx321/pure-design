@@ -11,7 +11,7 @@ import com.qingge.springboot.entity.User;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author longdengyu

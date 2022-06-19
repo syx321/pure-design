@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author 青哥哥
@@ -17,8 +17,8 @@ public interface CourseMapper extends BaseMapper<Course> {
 
     Page<Course> findPage(Page<Course> page, @Param("name") String name);
 
-    void deleteStudentCourse(@Param("courseId")Integer courseId, @Param("studentId") Integer studentId);
+    void deleteStudentCourse(@Param("courseId") Integer courseId, @Param("studentId") Integer studentId);
 
-    void setStudentCourse(@Param("courseId")Integer courseId, @Param("studentId") Integer studentId);
+    void setStudentCourse(@Param("courseId") Integer courseId, @Param("studentId") Integer studentId);
 
 }

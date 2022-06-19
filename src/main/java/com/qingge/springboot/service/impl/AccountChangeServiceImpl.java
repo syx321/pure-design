@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author longdengyu
@@ -22,6 +22,7 @@ public class AccountChangeServiceImpl extends ServiceImpl<AccountChangeMapper, A
 
     @Resource
     AccountChangeMapper accountChangeMapper;
+
     @Override
     public Page<AccountChange> findPage(Page<AccountChange> objectPage, String userId) {
         return accountChangeMapper.findPage(objectPage, userId);

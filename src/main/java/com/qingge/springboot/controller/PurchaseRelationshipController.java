@@ -2,17 +2,12 @@ package com.qingge.springboot.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.qingge.springboot.common.Constants;
-import com.qingge.springboot.common.ReceiveState;
-import com.qingge.springboot.config.AuthAccess;
-import com.qingge.springboot.entity.AccountChange;
-import com.qingge.springboot.entity.Files;
-import com.qingge.springboot.mapper.AccountChangeMapper;
 import com.qingge.springboot.mapper.PurchaseRelationshipMapper;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.qingge.springboot.common.Result;
 
 import com.qingge.springboot.service.IPurchaseRelationshipService;
@@ -22,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author longdengyu
@@ -59,15 +54,16 @@ public class PurchaseRelationshipController {
     // 订单完成
     @GetMapping("/evaluate")
     public Result userEvaluate(@RequestParam Integer orderId,
-                              @RequestParam String userEvaluate,
-                              @RequestParam String sellerAttitude,
-                              @RequestParam Integer score) {
+                               @RequestParam String userEvaluate,
+                               @RequestParam String sellerAttitude,
+                               @RequestParam Integer score) {
         return purchaseRelationshipService.userEvaluate(orderId, userEvaluate, sellerAttitude, score);
     }
+
     //商家评价
     @GetMapping("/sellerEvaluate")
     public Result sellerEvaluate(@RequestParam Integer orderId,
-                               @RequestParam String sellerEvaluate) {
+                                 @RequestParam String sellerEvaluate) {
         return purchaseRelationshipService.sellerEvaluate(orderId, sellerEvaluate);
     }
 
@@ -85,21 +81,38 @@ public class PurchaseRelationshipController {
     public Result findOne(@PathVariable Integer id) {
         return Result.success(purchaseRelationshipService.getById(id));
     }
+
     @GetMapping("/page")
     public Result userFindPage(@RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize,
-                           @RequestParam(defaultValue = "") String name,
-                           @RequestParam Integer userId) {
+                               @RequestParam Integer pageSize,
+                               @RequestParam(defaultValue = "") String name,
+                               @RequestParam Integer userId) {
         return Result.success(purchaseRelationshipService.findMyOrder(new Page<>(pageNum, pageSize), name, userId));
     }
 
     @GetMapping("/sellerPage")
     public Result sellerFindPage(@RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize,
-                           @RequestParam(defaultValue = "") String name,
-                           @RequestParam Integer businessId) {
+                                 @RequestParam Integer pageSize,
+                                 @RequestParam(defaultValue = "") String name,
+                                 @RequestParam Integer businessId) {
         return Result.success(purchaseRelationshipService.sellerAllOrder(new Page<>(pageNum, pageSize), name, businessId));
     }
 
+    @PostMapping("/addProductToUserCart")
+    public Result addProductToUserCart(@RequestParam Integer userId,
+                                       @RequestBody List<Integer> productsId) {
+        return purchaseRelationshipService.addProductToUserCart(productsId, userId);
+    }
+
+    @PostMapping("/placeOrdersAtOnce")
+    public Result placeOrdersAtOnce(@RequestParam Integer userId) {
+        return purchaseRelationshipService.placeOrdersAtOnce(userId);
+    }
+
+    @PostMapping("requestForReturn")
+    public Result requestForReturn(@RequestParam Integer userId,
+                                   @RequestBody Integer productId) {
+        return purchaseRelationshipService.requestForReturn(userId, productId);
+    }
 }
 

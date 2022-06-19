@@ -6,8 +6,10 @@ import com.qingge.springboot.config.AuthAccess;
 import com.qingge.springboot.entity.Files;
 import com.qingge.springboot.mapper.AccountChangeMapper;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qingge.springboot.common.Result;
 
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author longdengyu
