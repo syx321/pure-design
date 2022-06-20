@@ -41,6 +41,8 @@ public class PersonDTO {
 
     private String address;
 
+    private String level;
+
     private List<Menu> menus;
 
     private String token;

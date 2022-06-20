@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
+import com.qingge.springboot.common.LevelEnum;
 import com.qingge.springboot.common.ReceiveState;
 import com.qingge.springboot.common.Result;
 import com.qingge.springboot.controller.dto.OrderDTO;
@@ -30,6 +31,7 @@ import java.util.List;
 @Service
 public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelationshipMapper, PurchaseRelationship> implements IPurchaseRelationshipService {
 
+
     @Resource
     PurchaseRelationshipMapper purchaseRelationshipMapper;
 
@@ -54,14 +56,18 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         Person business = personMapper.selectById(businessId);
         AccountChange businessAccount = new AccountChange();
 
+        //获取商家等级对应的费率
+        LevelEnum levelEnum = StrToEnum(business.getLevel());
+        double level_Rate = Double.valueOf(levelEnum.getRate());
+
         purchaseRelationship.setDeliverState(ReceiveState.RECEIVED.toString());
         purchaseRelationship.setReceivedTime(currentTime);
 
         businessAccount.setUserId(businessId);
-        businessAccount.setIncomeRecord(purchaseRelationship.getTotal());
+        businessAccount.setIncomeRecord(purchaseRelationship.getTotal()*level_Rate);
         businessAccount.setTime(currentTime);
 
-        business.setBalance(business.getBalance() + purchaseRelationship.getTotal());
+        business.setBalance(business.getBalance() + purchaseRelationship.getTotal()*level_Rate);
 
         purchaseRelationshipMapper.updateById(purchaseRelationship);
         accountChangeMapper.insert(businessAccount);
@@ -204,5 +210,26 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         }
 
         return Result.success("退货申请成功");
+    }
+
+    //String to LevelEnum
+    public LevelEnum StrToEnum(String level){
+        switch (level){
+            case "LEVEL_1":
+                return LevelEnum.LEVEL_1;
+            case "LEVEL_2":
+                return LevelEnum.LEVEL_2;
+            case "LEVEL_3":
+                return LevelEnum.LEVEL_3;
+            case "LEVEL_4":
+                return LevelEnum.LEVEL_4;
+            case "LEVEL_5":
+                return LevelEnum.LEVEL_5;
+            default:
+                System.out.println("错误的等级");
+                break;
+        }
+        return null;
+
     }
 }

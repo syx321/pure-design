@@ -75,7 +75,7 @@ public class Person implements Serializable {
       private double balance;
 
       @ApiModelProperty("卖家等级")
-      private Integer level;
+      private String level;
 
 
 }

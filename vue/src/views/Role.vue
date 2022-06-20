@@ -106,6 +106,16 @@
         <el-form-item label="地址">
           <el-input v-model="form.address" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="商家等级">
+          <el-select v-model="form.level" placeholder="请选择">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -144,10 +154,10 @@ export default {
       username: "",
       email: "",
       address: "",
-      role:"",
-      registerChecked:"",
-      licenseUrl:["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
-      idCardUrl:["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
+      role: "",
+      registerChecked: "",
+      licenseUrl: ["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
+      idCardUrl: ["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
       form: {},
       dialogFormVisible: false,
       multipleSelection: [],
@@ -155,7 +165,24 @@ export default {
       vis: false,
       stuCourses: [],
       stuVis: false,
-      pageType:"ALL"
+      pageType: "ALL",
+      options: [{
+        value: 'LEVEL_1',
+        label: '商家等级1'
+      }, {
+        value: 'LEVEL_2',
+        label: '商家等级2'
+      }, {
+        value: 'LEVEL_3',
+        label: '商家等级3'
+      }, {
+        value: 'LEVEL_4',
+        label: '商家等级4'
+      }, {
+        value: 'LEVEL_5',
+        label: '商家等级5'
+      }],
+      level: '',//编辑表单中的商家等级
     }
   },
   created() {
@@ -170,6 +197,7 @@ export default {
           username: this.username,
           email: this.email,
           address: this.address,
+
         }
       }).then(res => {
         this.tableData = res.data.records

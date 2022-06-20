@@ -104,10 +104,10 @@
             <div slot="tip" class="el-upload__tip">身份证，只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item >
-          <el-form-item  label="验证码" style="margin-bottom: 15px;margin-right: 5px;text-align: center;" prop="verify" align="center">
-            <el-input placeholder="请输入正确的验证码" size="small" style="margin: 5px 0;width: 224px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>
-            <el-image src="http://localhost:9090/verify/getcode" style="width: 80px;height: 30px"  @click=""></el-image>
-          </el-form-item >
+        <el-form-item  label="验证码" style="margin-bottom: 15px;margin-right: 5px;text-align: center;" prop="verify" align="center">
+            <el-input placeholder="请输入正确的验证码" size="small" style="width: 224px" prefix-icon="el-icon-user" v-model="buss.verifyCode"></el-input>
+            <el-image src="http://localhost:9090/verify/getcode" style="width: 80px;height: 30px;"  @click=""></el-image>
+        </el-form-item >
         <el-form-item label="性别">
           <div>
             <el-radio-group v-model="buss.sex" size="medium" >
