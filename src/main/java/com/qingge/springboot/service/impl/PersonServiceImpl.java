@@ -205,7 +205,8 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
             return true;
         }else {
             return false;
-        }    }
+        }
+    }
 
     private Person getUserInfo(PersonDTO personDTO) {
         QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
