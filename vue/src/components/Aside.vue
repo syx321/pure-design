@@ -8,15 +8,15 @@
            router
   >
     <div style="height: 60px; line-height: 60px; text-align: center">
-      <img src="../assets/logo.png" alt="" style="width: 20px; position: relative; top: 5px;">
-      <b style="color: white; margin-left: 5px" v-show="logoTextShow">后台管理系统</b>
+      <img src="../assets/manage.png" alt="" style="width: 20px; position: relative; top: 5px;">
+      <b style="color: white; margin-left: 5px" v-show="logoTextShow">二手交易后台管理系统</b>
     </div>
     <div v-for="item in menus" :key="item.id">
       <div v-if="item.path">
-        <el-menu-item :index="item.path">
-          <i :class="item.icon"></i>
-          <span slot="title">{{ item.name }}</span>
-        </el-menu-item>
+<!--        <el-menu-item :index="item.path">-->
+<!--          <i :class="item.icon"></i>-->
+<!--          <span slot="title">{{ item.name }}</span>-->
+<!--        </el-menu-item>-->
       </div>
       <div v-else>
         <el-submenu :index="item.id + ''">
