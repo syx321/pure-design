@@ -21,5 +21,5 @@ public interface IBusinessProductService extends IService<BusinessProduct> {
 
     Result approveForReturn(Integer orderId, Boolean isApproval);
 
-    Result sellerEvaluate(Integer orderId, String sellerEvaluate, String sellerAttitude, Integer score);
+    Result sellerEvaluate(Integer orderId, String sellerEvaluate, Integer score);
 }

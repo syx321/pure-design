@@ -56,6 +56,9 @@ public class PurchaseRelationship implements Serializable {
     @ApiModelProperty("卖家对客户评价")
     private String sellerEvaluate;
 
+    @ApiModelProperty("卖家打分")
+    private String sellerScore;
+
     @ApiModelProperty("是否在购物车")
     private Integer isCart;
 

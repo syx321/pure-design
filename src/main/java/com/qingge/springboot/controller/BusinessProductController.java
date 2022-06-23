@@ -95,7 +95,7 @@ public class BusinessProductController {
                                    @RequestParam String sellerEvaluate,
                                    @RequestParam String sellerAttitude,
                                    @RequestParam Integer score) {
-        return businessProductService.sellerEvaluate(orderId, sellerEvaluate, sellerAttitude, score);
+        return businessProductService.sellerEvaluate(orderId, sellerEvaluate, score);
     }
 
 }

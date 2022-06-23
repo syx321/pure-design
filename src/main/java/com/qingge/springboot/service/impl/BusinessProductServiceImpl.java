@@ -100,7 +100,16 @@ public class BusinessProductServiceImpl extends ServiceImpl<BusinessProductMappe
     }
 
     @Override
-    public Result sellerEvaluate(Integer orderId, String sellerEvaluate, String sellerAttitude, Integer score) {
+    public Result sellerEvaluate(Integer orderId, String sellerEvaluate, Integer score) {
+        PurchaseRelationship purchaseRelationship = purchaseRelationshipMapper.selectOne(
+                new QueryWrapper<PurchaseRelationship>()
+                        .eq("order_id", orderId)
+        );
+        purchaseRelationship.setSellerEvaluate(sellerEvaluate);
+        purchaseRelationship.setSellerScore(String.valueOf(score));
+        if (purchaseRelationshipMapper.updateById(purchaseRelationship) == 0) {
+            return Result.error(Constants.CODE_400, "卖家评论失败");
+        }
         return null;
     }
 
