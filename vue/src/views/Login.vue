@@ -13,7 +13,7 @@
         </el-form-item>
         <el-form-item style="margin: 10px 0; text-align: right">
           <el-button type="warning" size="small" autocomplete="off" @click="$router.push('/register')">注册</el-button>
-          <el-button type="primary" size="small" autocomplete="off" @click="login">登录</el-button>
+          <el-button type="primary" size="small" autocomplete="off" @click="login2">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -27,7 +27,8 @@ export default {
   name: "Login",
   data() {
     return {
-      user: {},
+      user: {
+      },
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'},
@@ -41,21 +42,27 @@ export default {
     }
   },
   methods: {
-    login() {
+    login2(){
       this.$refs['userForm'].validate((valid) => {
         if (valid) {  // 表单校验合法
-          this.request.post("/user/login", this.user).then(res => {
+          this.request.post("/person/login", this.user).then(res => {
             if (res.code === '200') {
               localStorage.setItem("user", JSON.stringify(res.data))  // 存储用户信息到浏览器
               localStorage.setItem("menus", JSON.stringify(res.data.menus))  // 存储用户信息到浏览器
               // 动态设置当前用户的路由
               setRoutes()
-              this.$message.success("登录成功")
 
-              if (res.data.role === 'ROLE_STUDENT') {
+              if (res.data.role === 'ROLE_USER') {
+                this.$message.success("登录成功")
                 this.$router.push("/front/home")
-              } else {
+              } else if(res.data.role === 'ROLE_BUSINESS'){
+                this.$message.success("登录成功")
+                this.$router.push("/front/home")
+              }else if(res.data.role === 'ROLE_ADMIN'){
+                this.$message.success("登录成功")
                 this.$router.push("/home")
+              }else {
+                this.$message.error("未取得任何权限")
               }
             } else {
               this.$message.error(res.msg)

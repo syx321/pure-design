@@ -1,15 +1,15 @@
 <template>
+  <!--  商品后台管理页面-->
+  <!--  商品后台管理页面-->
+  <!--  商品后台管理页面-->
   <div>
     <div style="margin: 10px 0">
-      <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="name"></el-input>
-<!--      <el-input style="width: 200px" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5" v-model="email"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入地址" suffix-icon="el-icon-position" class="ml-5" v-model="address"></el-input>-->
-      <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
+      <el-input style="width: 200px" placeholder="请输入商品名称" suffix-icon="el-icon-search" v-model="productName"></el-input>
+      <el-button class="ml-5" type="primary" @click="search">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
 
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="handleAdd(null)">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -21,75 +21,62 @@
       >
         <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
-<!--      <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>-->
-<!--      </el-upload>-->
-<!--      <el-button type="primary" @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button>-->
+      <el-button type="primary" @click="changePageType" class="ml-5"> 切换 <i class="el-icon-top"></i></el-button>
+
     </div>
 
-    <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"
-              row-key="id" default-expand-all @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="80"></el-table-column>
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="path" label="路径"></el-table-column>
-      <el-table-column prop="pagePath" label="页面路径"></el-table-column>
-      <el-table-column label="图标" class-name="fontSize18" align="center" label-class-name="fontSize12">
+    <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="45"></el-table-column>
+      <el-table-column prop="productId" label="ID" width="40"></el-table-column>
+      <el-table-column prop="name" label="商品名称" width="100"></el-table-column>
+      <el-table-column prop="sort" label="商品类别" width="110"></el-table-column>
+      <el-table-column prop="price" label="商品价格" width="110"></el-table-column>
+      <el-table-column prop="dealStyle" label="交易方式" width="110"></el-table-column>
+      <el-table-column prop="img" label="商品宣传图">
         <template slot-scope="scope">
-          <span :class="scope.row.icon" />
+          <el-image style="width: 100px;height: 100px"
+              :src="scope.row.img"
+              :preview-src-list="productImgUrl" @click="productImgPreview(scope.row)"></el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column prop="sortNum" label="顺序"></el-table-column>
-      <el-table-column label="操作"  width="300" align="center">
+      <el-table-column prop="registerChecked" width="250px" label="审核状态">
+        <template slot-scope="scope" >
+          <el-tag type="danger" v-if="scope.row.checked == '0'">未通过</el-tag>
+          <el-tag type="primary" v-if="scope.row.checked == '1'">已通过</el-tag>
+          <span style="padding-left: 10px;padding-right: 10px">|</span>
+          <el-button type="success" @click="handlePass(scope.row)">通过 <i class="el-icon-check"></i></el-button>
+          <el-button type="danger" @click="handleFail(scope.row)">驳回 <i class="el-icon-close"></i></el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作"  width="200" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">新增子菜单 <i class="el-icon-plus"></i></el-button>
-          <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
-              cancel-button-text='我再想想'
+              cancel-button-text='取消'
               icon="el-icon-info"
               icon-color="red"
               title="您确定删除吗？"
-              @confirm="del(scope.row.id)"
+              @confirm="del(scope.row)"
           >
             <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
+    <div style="padding: 10px 0">
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
+    </div>
 
-    <el-dialog title="菜单信息" :visible.sync="dialogFormVisible" width="30%" >
-      <el-form label-width="80px" size="small">
-        <el-form-item label="名称">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="路径">
-          <el-input v-model="form.path" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="页面路径">
-          <el-input v-model="form.pagePath" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="图标">
-          <el-select clearable v-model="form.icon" placeholder="请选择" style="width: 100%">
-            <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.value">
-              <i :class="item.value" /> {{ item.name }}
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="顺序">
-          <el-input v-model="form.sortNum" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="form.description" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -97,18 +84,22 @@
 import {serverIp} from "../../public/config";
 
 export default {
-  name: "Menu",
+  name: "role",
   data() {
     return {
+      serverIp: serverIp,
       tableData: [],
       total: 0,
       pageNum: 1,
       pageSize: 10,
-      name: "",
+      productName: "",
+      checked:"",
+      productImgUrl: ["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
       form: {},
       dialogFormVisible: false,
       multipleSelection: [],
-      options: []
+      pageType: "ALL",
+
     }
   },
   created() {
@@ -116,21 +107,37 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/menu", {
+      this.request.get("/product/pageProduct", {
         params: {
-          name: this.name,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          productName:this.productName
+
         }
       }).then(res => {
-        this.tableData = res.data
+        this.tableData = res.data.records
+        this.total = res.data.total
       })
 
-      // 请求图标的数据
-      this.request.get("/menu/icons").then(res => {
-        this.options = res.data
+    },
+    loadUncheck() {
+      this.request.get("/product/pageUncheckProduct", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          productName:this.productName
+
+        }
+      }).then(res => {
+
+        this.tableData = res.data.records
+        this.total = res.data.total
+
       })
+
     },
     save() {
-      this.request.post("/menu", this.form).then(res => {
+      this.request.post("/product", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
@@ -140,62 +147,98 @@ export default {
         }
       })
     },
-    handleAdd(pid) {
-      this.dialogFormVisible = true
-      this.form = {}
-      if (pid) {
-        this.form.pid = pid
+    search(){
+      if(this.pageType === "ALL"){
+        this.load()
+      }else if(this.pageType === "Uncheck"){
+        this.loadUncheck()
+      }
+    },
+    reset() {
+      this.productName = ""
+      if(this.pageType === "ALL"){
+        this.load()
+      }else if(this.pageType === "Uncheck"){
+        this.loadUncheck()
+      }
+    },
+    refresh(){
+      if(this.pageType === "ALL"){
+        this.load()
+      }else if(this.pageType === "Uncheck"){
+        this.loadUncheck()
+      }
+    },
+    changePageType(){
+      if(this.pageType === "ALL"){
+        this.pageType = "Uncheck"
+        this.loadUncheck()
+      }else if(this.pageType === "Uncheck"){
+        this.pageType = "ALL"
+        this.load()
       }
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))
       this.dialogFormVisible = true
     },
-    del(id) {
-      this.request.delete("/menu/" + id).then(res => {
+    del(row) {
+      this.request.delete("/product/" + row.productId).then(res => {
         if (res.code === '200') {
           this.$message.success("删除成功")
-          this.load()
+          this.refresh()
         } else {
           this.$message.error("删除失败")
         }
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val
     },
+    handlePass(row){
+      this.checked = "1";
+      this.request.get("/product/updateCheckPass/"+row.productId).then(res => {
+        if (res.code === '200') {
+          this.$message.success("已通过！")
+          this.refresh()
+        } else {
+          this.$message.error("保存失败")
+        }
+      })
+    },
+    handleFail(row){
+      this.checked = "0";
+      this.request.get("/product/updateCheckFail/"+row.productId).then(res => {
+        if (res.code === '200') {
+          this.$message.success("已驳回！")
+          this.refresh()
+        } else {
+          this.$message.error("驳回失败")
+        }
+      })
+    },
     delBatch() {
-      let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
-      this.request.post("/menu/del/batch", ids).then(res => {
+      let ids = this.multipleSelection.map(v => v.productId)  // [{}, {}, {}] => [1,2,3]
+      this.request.post("/product/del/batch", ids).then(res => {
         if (res.code === '200') {
           this.$message.success("批量删除成功")
-          this.load()
+          this.refresh()
         } else {
           this.$message.error("批量删除失败")
         }
       })
     },
-    reset() {
-      this.name = ""
-      this.load()
-    },
     handleSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
     handleCurrentChange(pageNum) {
-      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     },
-    exp() {
-      window.open(`http://${serverIp}:9090/role/export`)
-    },
-    handleExcelImportSuccess() {
-      this.$message.success("导入成功")
-      this.load()
+    productImgPreview(row){
+      this.productImgUrl = []
+      this.productImgUrl.push(row.img)
     }
   }
 }
@@ -205,11 +248,5 @@ export default {
 <style>
 .headerBg {
   background: #eee!important;
-}
-.fontSize18{
-  font-size: 18px;
-}
-.fontSize12{
-  font-size: 12px;
 }
 </style>

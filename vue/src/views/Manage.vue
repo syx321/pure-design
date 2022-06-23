@@ -1,7 +1,7 @@
 <template>
   <el-container style="min-height: 100vh">
 
-    <el-aside :width="sideWidth + 'px'" style="box-shadow: 2px 0 6px rgb(0 21 41 / 35%);">
+    <el-aside :width="sideWidth + 'px'" style="box-shadow: 2px 0 6px rgb(0 21 41 );">
       <Aside :isCollapse="isCollapse" :logoTextShow="logoTextShow" />
     </el-aside>
 
@@ -60,7 +60,7 @@ export default {
       let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
       if (username) {
         // 从后台获取User数据
-        this.request.get("/user/username/" + username).then(res => {
+        this.request.get("/person/username/" + username).then(res => {
           // 重新赋值后台的最新User数据
           this.user = res.data
         })

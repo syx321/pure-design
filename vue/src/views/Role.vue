@@ -1,15 +1,17 @@
 <template>
+  <!--  商家后台管理页面-->
+  <!--  商家后台管理页面-->
+  <!--  商家后台管理页面-->
   <div>
     <div style="margin: 10px 0">
-      <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="name"></el-input>
-<!--      <el-input style="width: 200px" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5" v-model="email"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入地址" suffix-icon="el-icon-position" class="ml-5" v-model="address"></el-input>-->
-      <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
+      <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="username"></el-input>
+      <el-input style="width: 200px" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5" v-model="email"></el-input>
+      <el-input style="width: 200px" placeholder="请输入地址" suffix-icon="el-icon-position" class="ml-5" v-model="address"></el-input>
+      <el-button class="ml-5" type="primary" @click="search">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
 
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -21,30 +23,57 @@
       >
         <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
-<!--      <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>-->
-<!--      </el-upload>-->
-<!--      <el-button type="primary" @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button>-->
+      <el-button type="primary" @click="changePageType" class="ml-5"> 切换 <i class="el-icon-top"></i></el-button>
+
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="80"></el-table-column>
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="flag" label="唯一标识"></el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column label="操作"  width="280" align="center">
+      <el-table-column type="selection" width="45"></el-table-column>
+      <el-table-column prop="userId" label="ID" width="40"></el-table-column>
+      <el-table-column prop="username" label="用户名" width="100"></el-table-column>
+      <el-table-column prop="role" label="角色" width="80">
         <template slot-scope="scope">
-          <el-button type="info" @click="selectMenu(scope.row)">分配菜单 <i class="el-icon-menu"></i></el-button>
-          <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
+          <el-tag type="danger" v-if="scope.row.role === 'ROLE_ADMIN'">管理员</el-tag>
+          <el-tag type="primary" v-if="scope.row.role === 'ROLE_USER'">用户</el-tag>
+          <el-tag type="warning" v-if="scope.row.role === 'ROLE_BUSINESS'">商家</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="phone" label="电话" width="110"></el-table-column>
+      <el-table-column prop="email" label="邮箱" width="140"></el-table-column>
+      <el-table-column prop="license" label="营业执照">
+        <template slot-scope="scope">
+          <el-image
+              :src="scope.row.license"
+              :preview-src-list="licenseUrl" @click="licensePreview(scope.row)"></el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="idCardImg" label="身份证件">
+        <template slot-scope="scope">
+          <el-image :src="scope.row.idCardImg"
+                    :preview-src-list="idCardUrl" @click="idCardPreview(scope.row)"></el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="registerChecked" width="250px" label="审核状态">
+        <template slot-scope="scope" >
+          <el-tag type="danger" v-if="scope.row.registerChecked === false">未通过</el-tag>
+          <el-tag type="primary" v-if="scope.row.registerChecked === true">已通过</el-tag>
+          <span style="padding-left: 10px;padding-right: 10px">|</span>
+          <el-button type="success" @click="handlePass(scope.row)">通过 <i class="el-icon-check"></i></el-button>
+          <el-button type="danger" @click="handleFail(scope.row)">驳回 <i class="el-icon-close"></i></el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作"  width="200" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
-              cancel-button-text='我再想想'
+              cancel-button-text='取消'
               icon="el-icon-info"
               icon-color="red"
               title="您确定删除吗？"
-              @confirm="del(scope.row.id)"
+              @confirm="del(scope.row)"
           >
             <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
           </el-popconfirm>
@@ -63,16 +92,29 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="角色信息" :visible.sync="dialogFormVisible" width="30%" >
+    <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%" >
       <el-form label-width="80px" size="small">
-        <el-form-item label="名称">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-form-item label="用户名">
+          <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="唯一标识">
-          <el-input v-model="form.flag" autocomplete="off"></el-input>
+        <el-form-item label="邮箱">
+          <el-input v-model="form.email" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="form.description" autocomplete="off"></el-input>
+        <el-form-item label="电话">
+          <el-input v-model="form.phone" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-input v-model="form.address" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="商家等级">
+          <el-select v-model="form.level" placeholder="请选择">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -81,50 +123,66 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="菜单分配" :visible.sync="menuDialogVis" width="30%">
-      <el-tree
-          :props="props"
-          :data="menuData"
-          show-checkbox
-          node-key="id"
-          ref="tree"
-          :default-expanded-keys="expends"
-          :default-checked-keys="checks">
-         <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span><i :class="data.icon"></i> {{ data.name }}</span>
-         </span>
-      </el-tree>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="menuDialogVis = false">取 消</el-button>
-        <el-button type="primary" @click="saveRoleMenu">确 定</el-button>
-      </div>
+    <el-dialog title="课程信息" :visible.sync="vis" width="30%" >
+      <el-table :data="courses" border stripe>
+        <el-table-column prop="name" label="课程名称"></el-table-column>
+        <el-table-column prop="score" label="学分"></el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <el-dialog title="课程信息" :visible.sync="stuVis" width="30%" >
+      <el-table :data="stuCourses" border stripe>
+        <el-table-column prop="name" label="课程名称"></el-table-column>
+        <el-table-column prop="score" label="学分"></el-table-column>
+      </el-table>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import {serverIp} from "../../public/config";
+
 export default {
-  name: "Role",
+  name: "role",
   data() {
     return {
+      serverIp: serverIp,
       tableData: [],
       total: 0,
       pageNum: 1,
       pageSize: 10,
-      name: "",
+      username: "",
+      email: "",
+      address: "",
+      role: "",
+      registerChecked: "",
+      licenseUrl: ["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
+      idCardUrl: ["https://s3.bmp.ovh/imgs/2022/06/13/4617f1003dbcddf1.jpeg"],
       form: {},
       dialogFormVisible: false,
-      menuDialogVis: false,
       multipleSelection: [],
-      menuData: [],
-      props: {
-        label: 'name',
-      },
-      expends: [],
-      checks: [],
-      roleId: 0,
-      roleFlag: '',
-      ids: []
+      courses: [],
+      vis: false,
+      stuCourses: [],
+      stuVis: false,
+      pageType: "ALL",
+      options: [{
+        value: 'LEVEL_1',
+        label: '商家等级1'
+      }, {
+        value: 'LEVEL_2',
+        label: '商家等级2'
+      }, {
+        value: 'LEVEL_3',
+        label: '商家等级3'
+      }, {
+        value: 'LEVEL_4',
+        label: '商家等级4'
+      }, {
+        value: 'LEVEL_5',
+        label: '商家等级5'
+      }],
+      level: '',//编辑表单中的商家等级
     }
   },
   created() {
@@ -132,24 +190,40 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/role/page", {
+      this.request.get("/person/pageBusiness", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          name: this.name,
+          username: this.username,
+          email: this.email,
+          address: this.address,
+
         }
       }).then(res => {
         this.tableData = res.data.records
         this.total = res.data.total
       })
 
-      this.request.get("/menu/ids").then(r => {
-        this.ids = r.data
+    },
+    loadUncheck() {
+      this.request.get("/person/pageUncheckBusiness", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          username: this.username,
+          email: this.email,
+          address: this.address,
+        }
+      }).then(res => {
+
+        this.tableData = res.data.records
+        this.total = res.data.total
+
       })
 
     },
     save() {
-      this.request.post("/role", this.form).then(res => {
+      this.request.post("/person", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
@@ -159,94 +233,109 @@ export default {
         }
       })
     },
-    saveRoleMenu() {
-      this.request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
-        if (res.code === '200') {
-          this.$message.success("绑定成功")
-          this.menuDialogVis = false
-
-          // 操作管理员角色后需要重新登录
-          if (this.roleFlag === 'ROLE_ADMIN') {
-            this.$store.commit("logout")
-          }
-
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+    search(){
+      if(this.pageType === "ALL"){
+        this.load()
+      }else if(this.pageType === "Uncheck"){
+        this.loadUncheck()
+      }
     },
-    handleAdd() {
-      this.dialogFormVisible = true
-      this.form = {}
+    reset() {
+      this.username = ""
+      this.email = ""
+      this.address = ""
+      if(this.pageType === "ALL"){
+        this.load()
+      }else if(this.pageType === "Uncheck"){
+        this.loadUncheck()
+      }
+    },
+    refresh(){
+      if(this.pageType === "ALL"){
+        this.load()
+      }else if(this.pageType === "Uncheck"){
+        this.loadUncheck()
+      }
+    },
+    changePageType(){
+      if(this.pageType === "ALL"){
+        this.pageType = "Uncheck"
+        this.loadUncheck()
+      }else if(this.pageType === "Uncheck"){
+        this.pageType = "ALL"
+        this.load()
+      }
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))
       this.dialogFormVisible = true
     },
-    del(id) {
-      this.request.delete("/role/" + id).then(res => {
+    del(row) {
+      this.request.delete("/person/" + row.userId).then(res => {
         if (res.code === '200') {
           this.$message.success("删除成功")
-          this.load()
+          this.refresh()
         } else {
           this.$message.error("删除失败")
         }
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val
     },
+    handlePass(row){
+      this.registerChecked = true;
+      this.request.get("/person/updateCheckPass/"+row.userId).then(res => {
+        if (res.code === '200') {
+          this.$message.success("已通过！")
+          this.refresh()
+        } else {
+          this.$message.error("保存失败")
+        }
+      })
+    },
+    handleFail(row){
+      this.registerChecked = false;
+      this.request.get("/person/updateCheckFail/"+row.userId).then(res => {
+        if (res.code === '200') {
+          this.$message.success("已驳回！")
+          this.refresh()
+        } else {
+          this.$message.error("驳回失败")
+        }
+      })
+    },
     delBatch() {
-      let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
-      this.request.post("/role/del/batch", ids).then(res => {
+      let ids = this.multipleSelection.map(v => v.userId)  // [{}, {}, {}] => [1,2,3]
+      this.request.post("/person/del/batch", ids).then(res => {
         if (res.code === '200') {
           this.$message.success("批量删除成功")
-          this.load()
+          this.refresh()
         } else {
           this.$message.error("批量删除失败")
         }
       })
     },
-    reset() {
-      this.name = ""
-      this.load()
-    },
     handleSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
     handleCurrentChange(pageNum) {
-      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     },
-    async selectMenu(role) {
-      this.roleId = role.id
-      this.roleFlag = role.flag
-
-      // 请求菜单数据
-      this.request.get("/menu").then(res => {
-        this.menuData = res.data
-
-        // 把后台返回的菜单数据处理成 id数组
-        this.expends = this.menuData.map(v => v.id)
-      })
-
-      this.request.get("/role/roleMenu/" + this.roleId).then(res => {
-        this.checks = res.data
-        this.ids.forEach(id => {
-          if (!this.checks.includes(id)) {
-            // 可能会报错：Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'setChecked')
-            this.$nextTick(() => {
-              this.$refs.tree.setChecked(id, false)
-            })
-          }
-        })
-        this.menuDialogVis = true
-      })
+    handleExcelImportSuccess() {
+      this.$message.success("导入成功")
+      this.load()
     },
+    licensePreview(row){
+      this.licenseUrl = []
+      this.licenseUrl.push(row.license)
+    },
+    idCardPreview(row){
+      this.idCardUrl = []
+      this.idCardUrl.push(row.idCardImg)
+    }
   }
 }
 </script>

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.Result;
+import com.qingge.springboot.config.AuthAccess;
 import com.qingge.springboot.controller.dto.UserDTO;
 import com.qingge.springboot.controller.dto.UserPasswordDTO;
 import com.qingge.springboot.entity.User;
@@ -54,7 +55,7 @@ public class UserController {
         UserDTO dto = userService.login(userDTO);
         return Result.success(dto);
     }
-
+    //用户注册接口 ： 普通用户、商家
     @PostMapping("/register")
     public Result register(@RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
@@ -64,6 +65,7 @@ public class UserController {
         }
         return Result.success(userService.register(userDTO));
     }
+
 
     // 新增或者更新
     @PostMapping
@@ -122,23 +124,12 @@ public class UserController {
     }
 
     @GetMapping("/page")
+    @AuthAccess
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize,
                            @RequestParam(defaultValue = "") String username,
                            @RequestParam(defaultValue = "") String email,
                            @RequestParam(defaultValue = "") String address) {
-
-//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.orderByDesc("id");
-//        if (!"".equals(username)) {
-//            queryWrapper.like("username", username);
-//        }
-//        if (!"".equals(email)) {
-//            queryWrapper.like("email", email);
-//        }
-//        if (!"".equals(address)) {
-//            queryWrapper.like("address", address);
-//        }
 
         return Result.success(userService.findPage(new Page<>(pageNum, pageSize), username, email, address));
     }

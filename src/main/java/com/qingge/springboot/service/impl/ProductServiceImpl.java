@@ -1,5 +1,7 @@
 package com.qingge.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.common.ReceiveState;
@@ -92,5 +94,54 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public Result search(String name) {
         return Result.success(productMapper.findPage(name));
+    }
+
+    @Override
+    public boolean updateProductToPass(Integer id) {//审核通过
+        Product product = new Product();
+        product.setProductId(id);
+        product.setChecked(true);
+        int i = productMapper.updateById(product);
+        if(i == 1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateProductToFail(Integer id) {//审核驳回
+        Product product = new Product();
+        product.setProductId(id);
+        product.setChecked(false);
+        int i = productMapper.updateById(product);
+        if(i == 1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public IPage<Product> findProductPage(Integer pageNum, Integer pageSize, String productName) {
+        IPage<Product> productPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        if(!"".equals(productName)){
+            queryWrapper.like("name",productName);//（查询字段，查询字符）
+        }
+
+        return this.page(productPage,queryWrapper);
+    }
+
+    @Override
+    public IPage<Product> findUnCheckProductPage(Integer pageNum, Integer pageSize, String productName) {
+        IPage<Product> productPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("is_checked","0");
+        if(!"".equals(productName)){
+            queryWrapper.like("name",productName);//（查询字段，查询字符）
+        }
+
+        return this.page(productPage,queryWrapper);
     }
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel(value = "Product对象", description = "")
+@TableName("product")
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -67,7 +69,7 @@ public class Product implements Serializable {
     private Integer isEnable;
 
     @ApiModelProperty("是否通过审核")
-    private Integer isChecked;
+    private boolean isChecked;
 
     @ApiModelProperty("支付总价")
     private Double total;

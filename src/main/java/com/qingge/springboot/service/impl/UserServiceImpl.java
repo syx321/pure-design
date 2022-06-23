@@ -9,6 +9,7 @@ import com.qingge.springboot.common.RoleEnum;
 import com.qingge.springboot.controller.dto.UserDTO;
 import com.qingge.springboot.controller.dto.UserPasswordDTO;
 import com.qingge.springboot.entity.Menu;
+import com.qingge.springboot.entity.Person;
 import com.qingge.springboot.entity.User;
 import com.qingge.springboot.exception.ServiceException;
 import com.qingge.springboot.mapper.RoleMapper;
