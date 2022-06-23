@@ -2,6 +2,7 @@ package com.qingge.springboot.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qingge.springboot.entity.Product;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -67,5 +68,34 @@ public class BusinessProductController {
         return Result.success(businessProductService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-}
+    @PostMapping("/publishProduct")
+    public Result publishProduct(@RequestParam Integer businessId,
+                                 @RequestBody Product req) {
+        return  businessProductService.publishProduct(businessId, req.getName(), req.getPrice(), req.getSort(), req.getSize(), req.getImg(), req.getStockNum(), req.getDealStyle());
+    }
 
+    @PostMapping("/soldOutProduct")
+    public Result soldOutProduct(@RequestParam Integer productId) {
+        return businessProductService.soldOutProduct(productId);
+    }
+
+    @PostMapping("/deliver")
+    public Result deliver(@RequestParam Integer orderId) {
+        return businessProductService.deliver(orderId);
+    }
+
+    @PostMapping("/approveForReturn")
+    public Result approveForReturn(@RequestParam Integer orderId,
+                                   @RequestParam Boolean isApproval) {
+        return businessProductService.approveForReturn(orderId, isApproval);
+    }
+
+    @PostMapping("/sellerEvaluate")
+    public Result sellerEvaluate(@RequestParam Integer orderId,
+                                   @RequestParam String sellerEvaluate,
+                                   @RequestParam String sellerAttitude,
+                                   @RequestParam Integer score) {
+        return businessProductService.sellerEvaluate(orderId, sellerEvaluate, sellerAttitude, score);
+    }
+
+}

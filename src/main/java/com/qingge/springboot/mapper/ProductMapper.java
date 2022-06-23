@@ -17,5 +17,5 @@ import java.util.List;
  * @since 2022-06-09
  */
 public interface ProductMapper extends BaseMapper<Product> {
-    List<Product> findPage(@Param("name") String name);
+    Page<Product> findPage(@Param("name") String name);
 }

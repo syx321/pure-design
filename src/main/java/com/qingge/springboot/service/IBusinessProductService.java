@@ -13,12 +13,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-06-09
  */
 public interface IBusinessProductService extends IService<BusinessProduct> {
+    Result soldOutProduct(Integer productId);
 
-    Result publishProduct(Integer productId, Integer userId);
+    Result publishProduct(Integer businessId, String name, Double price, String sort, Double size, String image, Integer stockNum, String dealStyle);
 
-    Result soldOutProduct(Integer productId, Integer userId);
+    Result deliver(Integer orderId);
 
-    Result findProduct(Integer productId, Integer userId);
+    Result approveForReturn(Integer orderId, Boolean isApproval);
 
-
+    Result sellerEvaluate(Integer orderId, String sellerEvaluate, String sellerAttitude, Integer score);
 }

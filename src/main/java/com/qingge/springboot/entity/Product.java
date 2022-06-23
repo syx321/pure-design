@@ -69,4 +69,7 @@ public class Product implements Serializable {
     @ApiModelProperty("是否通过审核")
     private Integer isChecked;
 
+    @ApiModelProperty("支付总价")
+    private Double total;
+
 }

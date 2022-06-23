@@ -11,6 +11,7 @@ import com.qingge.springboot.entity.PurchaseRelationship;
 import com.qingge.springboot.mapper.AccountChangeMapper;
 import com.qingge.springboot.mapper.PersonMapper;
 import com.qingge.springboot.mapper.ProductMapper;
+import com.qingge.springboot.service.IBusinessProductService;
 import com.qingge.springboot.service.IProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingge.springboot.service.IPurchaseRelationshipService;
@@ -40,6 +41,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Resource
     private IPurchaseRelationshipService purchaseRelationshipService;
+
+    @Resource
+    IBusinessProductService businessProductService;
 
     @Override
     public Result purchase(Integer productId, Integer userId, Integer count) {
@@ -76,6 +80,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
             //创建订单
             purchaseRelationshipService.createOrder(purchaseRelationship);
+
+            // TODO: 付款后卖家发货
+
             return Result.success();
         } else {
             return Result.error(Constants.CODE_600, "余额不足");

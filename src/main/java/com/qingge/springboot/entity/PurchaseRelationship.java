@@ -62,8 +62,8 @@ public class PurchaseRelationship implements Serializable {
     @ApiModelProperty("订单创建时间")
     private Long createTime;
 
-      @ApiModelProperty("该订单支付总价")
-      private Double total;
+    @ApiModelProperty("该订单支付总价")
+    private Double total;
 
 
 }

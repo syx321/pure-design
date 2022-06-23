@@ -194,7 +194,7 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
             return Result.error(Constants.CODE_400, "退货失败，已申请或已驳回");
         }
 
-        if ((System.currentTimeMillis() - purchaseRelationship.getCreateTime()) > 24 * 60 * 60 * 1000) {
+        if ((System.currentTimeMillis() - purchaseRelationship.getReceivedTime()) > 24 * 60 * 60 * 1000) {
             return Result.error(Constants.CODE_400, "退货失败，已超过24h");
         }
 
