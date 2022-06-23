@@ -174,6 +174,7 @@ CREATE TABLE `purchase_relationship` (
   `received_time` bigint DEFAULT NULL COMMENT '拿时间戳算收货时长',
   `score` int DEFAULT NULL COMMENT '本次交易评分',
   `seller_evaluate` varchar(255) CHARACTER SET gbk COLLATE gbk_chinese_ci DEFAULT NULL COMMENT '卖家对客户评价',
+  seller_score int DEFAULT null comment '卖家打分',
   `is_cart` tinyint DEFAULT NULL COMMENT '是否在购物车',
   `create_time` bigint DEFAULT NULL COMMENT '订单创建时间',
   `total` double DEFAULT NULL,
