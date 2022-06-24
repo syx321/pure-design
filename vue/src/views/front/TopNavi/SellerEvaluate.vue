@@ -111,7 +111,8 @@ export default {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          businessId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 2,
+          businessId: 2,
+          // businessId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 2,
           name: this.name,
         }
       }).then(res => {
