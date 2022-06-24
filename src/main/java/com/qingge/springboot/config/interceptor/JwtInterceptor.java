@@ -8,8 +8,10 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.qingge.springboot.common.Constants;
 import com.qingge.springboot.config.AuthAccess;
+import com.qingge.springboot.entity.Person;
 import com.qingge.springboot.entity.User;
 import com.qingge.springboot.exception.ServiceException;
+import com.qingge.springboot.service.IPersonService;
 import com.qingge.springboot.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -21,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class JwtInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private IUserService userService;
+    private IPersonService personService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -49,7 +51,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
         }
         // 根据token中的userid查询数据库
-        User user = userService.getById(userId);
+        Person user = personService.getById(userId);
         if (user == null) {
             throw new ServiceException(Constants.CODE_401, "用户不存在，请重新登录");
         }

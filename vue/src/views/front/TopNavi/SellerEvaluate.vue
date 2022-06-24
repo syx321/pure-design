@@ -111,9 +111,8 @@ export default {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          // businessId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
+          businessId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 2,
           name: this.name,
-          businessId: 2
         }
       }).then(res => {
         this.tableData = res.data.records
