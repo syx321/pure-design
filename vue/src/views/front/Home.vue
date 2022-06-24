@@ -82,8 +82,7 @@ export default {
       })
     },
     purchase(product){
-      // this.request.get("/person/" + localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 1).then(res => {
-      this.request.get("/person/" + 1).then(res => {
+      this.request.get("/person/" + localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 1).then(res => {
         if (res.code === '200') {
           this.$confirm(res.data.shoppingPoints + '积分将优惠' + parseInt(res.data.shoppingPoints / 100) + '元', '提示', {
             confirmButtonText: '确定',
@@ -93,8 +92,7 @@ export default {
             this.request.get("/product/purchase", {
               params: {
                 productId: product.productId,
-                // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
-                userId: 1,
+                userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 1,
                 count: 1
               }
             }).then(res => {
