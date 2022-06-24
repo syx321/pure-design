@@ -22,9 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
+//    @Autowired
+//    private IUserService userService;
+
     @Autowired
     private IPersonService personService;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");

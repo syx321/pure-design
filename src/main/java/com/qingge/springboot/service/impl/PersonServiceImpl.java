@@ -50,6 +50,7 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         Person one = getUserInfo(personDTO);
         if (one != null) {
             BeanUtil.copyProperties(one, personDTO, true);
+            personDTO.setId(one.getUserId());
             // 设置token
             String token = TokenUtils.genToken(one.getUserId().toString(), one.getPassword());
             personDTO.setToken(token);
