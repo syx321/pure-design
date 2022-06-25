@@ -19,30 +19,29 @@
     </div>
 
     <div style="margin: 10px 0">
-      <el-row :gutter="10">
-        <el-col :span="6" v-for="item in tableData" :key="item.productId" style="margin-bottom: 10px">
-
-          <div style="border: 1px solid #ccc; padding-bottom: 10px">
-            <img :src="item.img" alt="" style="width: 100%">
-            <div style="color: #666; padding: 10px">
-              <span style="padding-right: 15px">{{ item.name }}</span>
-              <el-tag type="primary">{{ item.sort }}</el-tag>
+        <el-row :gutter="10">
+          <el-col :span="6" v-for="item in tableData" :key="item.productId" style="margin-bottom: 10px">
+            <div style="border: 1px solid #ccc; padding-bottom: 10px">
+              <img :src="item.img" alt="" style="width: 100%">
+              <div style="color: #666; padding: 10px">
+                <span style="padding-right: 15px">{{ item.name }}</span>
+                <el-tag type="primary">{{ item.sort }}</el-tag>
+              </div>
+              <div style="color: #666; padding: 10px">
+                <span>尺寸: {{ item.size }}</span>
+                <span style="padding-left: 15px">价格: ¥ {{ item.price }}</span>
+              </div>
+              <div style="color: #666; padding: 10px">
+                <span>评分: {{ item.score }}</span>
+                <span style="padding-left: 15px">购买人数: {{ item.purchaseNum }}</span>
+              </div>
+              <div style="padding: 10px">
+                <el-button type="success" @click="purchase(item)">购买</el-button>
+                <el-button type="info">加入购物车</el-button>
+              </div>
             </div>
-            <div style="color: #666; padding: 10px">
-              <span>尺寸: {{ item.size }}</span>
-              <span style="padding-left: 15px">价格: ¥ {{ item.price }}</span>
-            </div>
-            <div style="color: #666; padding: 10px">
-              <span>评分: {{ item.score }}</span>
-              <span style="padding-left: 15px">购买人数: {{ item.purchaseNum }}</span>
-            </div>
-            <div style="padding: 10px">
-              <el-button type="success" @click="purchase(item)">购买</el-button>
-              <el-button type="info">加入购物车</el-button>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
     </div>
   </div>
 </template>
@@ -68,6 +67,7 @@ export default {
         purchaseNum:0,
         score:0,
         favorableRate:0,
+        isEnable: true
       },
       name:""
     }
@@ -78,11 +78,10 @@ export default {
   methods: {
     load(){
       this.request.get("/product").then(res => {
-        this.tableData = res.data
+        this.tableData = res.data.filter(v => v.isEnable)
       })
     },
     purchase(product){
-      // this.request.get("/person/" + localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 1).then(res => {
       this.request.get("/person/" + 1).then(res => {
         if (res.code === '200') {
           this.$confirm(res.data.shoppingPoints + '积分将优惠' + parseInt(res.data.shoppingPoints / 100) + '元', '提示', {
@@ -93,8 +92,7 @@ export default {
             this.request.get("/product/purchase", {
               params: {
                 productId: product.productId,
-                // userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).userId : 0
-                userId: 1,
+                userId: JSON.parse(localStorage.getItem("user")).id,
                 count: 1
               }
             }).then(res => {
@@ -140,7 +138,6 @@ export default {
       this.tableData.sort(function (a, b){
         return b.purchaseNum - a.purchaseNum
       })
-      console.log(this.tableData)
     }
 
   }
