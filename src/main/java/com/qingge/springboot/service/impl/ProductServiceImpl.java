@@ -52,7 +52,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         if (user.getBalance() > product.getPrice() * count) {
 
-            Integer shoppingPoints = user.getShoppingPoints();
+            Integer shoppingPoints = user.getShoppingPoints() == null ? 0: user.getShoppingPoints();
             Integer coupon = user.getShoppingPoints() / 100;
             user.setBalance(user.getBalance() - product.getPrice() * count - coupon);
             user.setShoppingPoints(shoppingPoints % 100);
@@ -76,6 +76,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             purchaseRelationship.setCount(count);
             purchaseRelationship.setCreateTime(System.currentTimeMillis());
             purchaseRelationship.setDeliverState(ReceiveState.WAIT_FOR_RECEIVING.toString());
+            purchaseRelationship.setTotal(product.getPrice() * count - coupon);
             //创建订单
             purchaseRelationshipService.createOrder(purchaseRelationship);
             return Result.success();

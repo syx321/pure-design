@@ -343,7 +343,7 @@ export default {
 <style>
   .wrapper {
     height: 100vh;
-    background-image: linear-gradient(to bottom right, #FC466B , #3F5EFB);
+    background-image: linear-gradient(to bottom right, #46fce7, #fbdc3f);
     overflow: hidden;
   }
 </style>

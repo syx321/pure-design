@@ -64,10 +64,10 @@ public class PurchaseRelationshipServiceImpl extends ServiceImpl<PurchaseRelatio
         purchaseRelationship.setReceivedTime(currentTime);
 
         businessAccount.setUserId(businessId);
-        businessAccount.setIncomeRecord(purchaseRelationship.getTotal()*level_Rate);
+        businessAccount.setIncomeRecord(purchaseRelationship.getTotal() * level_Rate);
         businessAccount.setTime(currentTime);
 
-        business.setBalance(business.getBalance() + purchaseRelationship.getTotal()*level_Rate);
+        business.setBalance(business.getBalance() + purchaseRelationship.getTotal() * level_Rate);
 
         purchaseRelationshipMapper.updateById(purchaseRelationship);
         accountChangeMapper.insert(businessAccount);
