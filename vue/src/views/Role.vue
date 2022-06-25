@@ -123,19 +123,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="课程信息" :visible.sync="vis" width="30%" >
-      <el-table :data="courses" border stripe>
-        <el-table-column prop="name" label="课程名称"></el-table-column>
-        <el-table-column prop="score" label="学分"></el-table-column>
-      </el-table>
-    </el-dialog>
 
-    <el-dialog title="课程信息" :visible.sync="stuVis" width="30%" >
-      <el-table :data="stuCourses" border stripe>
-        <el-table-column prop="name" label="课程名称"></el-table-column>
-        <el-table-column prop="score" label="学分"></el-table-column>
-      </el-table>
-    </el-dialog>
   </div>
 </template>
 

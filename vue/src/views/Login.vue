@@ -48,6 +48,7 @@ export default {
           this.request.post("/person/login", this.user).then(res => {
             if (res.code === '200') {
               localStorage.setItem("user", JSON.stringify(res.data))  // 存储用户信息到浏览器
+              console.log(localStorage.getItem("user"))
               localStorage.setItem("menus", JSON.stringify(res.data.menus))  // 存储用户信息到浏览器
               // 动态设置当前用户的路由
               setRoutes()
@@ -78,7 +79,7 @@ export default {
 <style>
 .wrapper {
   height: 100vh;
-  background-image: linear-gradient(to bottom right, #FC466B, #3F5EFB);
+  background-image: linear-gradient(to bottom right, #46fce7, #fbdc3f);
   overflow: hidden;
 }
 </style>
