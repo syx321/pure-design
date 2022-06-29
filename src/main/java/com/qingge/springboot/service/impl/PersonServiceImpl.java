@@ -48,7 +48,7 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
     @Override
     public PersonDTO login(PersonDTO personDTO) {
         Person one = getUserInfo(personDTO);
-        if (one != null) {
+        if (one != null && one.isRegisterChecked()) {
             BeanUtil.copyProperties(one, personDTO, true);
             personDTO.setId(one.getUserId());
             // 设置token
@@ -60,7 +60,9 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
             List<Menu> roleMenus = getRoleMenus(role);
             personDTO.setMenus(roleMenus);
             return personDTO;
-        } else {
+        } else if(one != null && !one.isRegisterChecked()){
+            throw new ServiceException(Constants.CODE_600, "用户审核未通过！");
+        }else {
             throw new ServiceException(Constants.CODE_600, "用户名或密码错误");
         }
     }

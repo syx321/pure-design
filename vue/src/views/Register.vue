@@ -39,7 +39,7 @@
           </div>
         </el-form-item>
         <el-form-item style="margin-right: 100px; text-align: right;">
-          <el-button type="primary" size="small"  autocomplete="off" @click="register">点击注册</el-button>
+          <el-button type="primary" size="small"  autocomplete="off" @click="checkVerifyCode">点击注册</el-button>
           <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/login')">返回登录</el-button>
           <el-button style="margin-left: 210px" type="success" size="small" round @click="checkVerifyCode" v-show="false">验证码检测<i class="el-icon-arrow-right el-icon--right"></i></el-button>
         </el-form-item>
@@ -117,7 +117,7 @@
           </div>
         </el-form-item>
         <el-form-item style="margin-right: 100px; text-align: right;">
-          <el-button type="primary" size="small"  autocomplete="off" @click="register">点击注册</el-button>
+          <el-button type="primary" size="small"  autocomplete="off" @click="checkVerifyCode">点击注册</el-button>
           <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/login')">返回登录</el-button>
           <el-button style="margin-left: 210px" type="success" size="small" round @click="checkVerifyCode" v-show="false">验证码检测<i class="el-icon-arrow-right el-icon--right"></i></el-button>
         </el-form-item>
@@ -213,50 +213,50 @@ export default {
   methods: {
     register() {
       this.checkVerifyCode()
-      console.log(this.user.verifyResult)
-      if(this.registerType == "ROLE_USER"){
-        this.user.role = this.registerType
-        this.$refs['userForm'].validate((valid) => {
-          if (valid) {  // 表单校验合法
-            if (this.user.password !== this.user.confirmPassword) {
-              this.$message.error("两次输入的密码不一致")
-              return false
-            }
-            if (this.user.verifyResult !== "ok") {
-              this.$message.warning("验证码输入错误！")
-              return false
-            }
-            this.request.post("/person/register",this.user).then(res => {
-              if(res.code === '200') {
-                this.$message.success("注册成功")
-              } else {
-                this.$message.error(res.msg)
-              }
-            })
-          }
-        });
-      }else {
-        this.buss.role = this.registerType
-        this.$refs['bussForm'].validate((valid) => {
-          if (valid) {  // 表单校验合法
-            if (this.buss.password !== this.buss.confirmPassword) {
-              this.$message.error("两次输入的密码不一致")
-              return false
-            }
-            if (this.buss.verifyResult !== "ok") {
-              this.$message.warning("验证码输入错误！")
-              return false
-            }
-            this.request.post("/person/register",this.buss).then(res => {
-              if(res.code === '200') {
-                this.$message.success("注册成功")
-              } else {
-                this.$message.error(res.msg)
-              }
-            })
-          }
-        });
-      }
+      // console.log(this.user.verifyResult)
+      // if(this.registerType == "ROLE_USER"){
+      //   this.user.role = this.registerType
+      //   this.$refs['userForm'].validate((valid) => {
+      //     if (valid) {  // 表单校验合法
+      //       if (this.user.password !== this.user.confirmPassword) {
+      //         this.$message.error("两次输入的密码不一致")
+      //         return false
+      //       }
+      //       if (this.user.verifyResult !== "ok") {
+      //         this.$message.warning("验证码输入错误！")
+      //         return false
+      //       }
+      //       this.request.post("/person/register",this.user).then(res => {
+      //         if(res.code === '200') {
+      //           this.$message.success("注册成功")
+      //         } else {
+      //           this.$message.error(res.msg)
+      //         }
+      //       })
+      //     }
+      //   });
+      // }else {
+      //   this.buss.role = this.registerType
+      //   this.$refs['bussForm'].validate((valid) => {
+      //     if (valid) {  // 表单校验合法
+      //       if (this.buss.password !== this.buss.confirmPassword) {
+      //         this.$message.error("两次输入的密码不一致")
+      //         return false
+      //       }
+      //       if (this.buss.verifyResult !== "ok") {
+      //         this.$message.warning("验证码输入错误！")
+      //         return false
+      //       }
+      //       this.request.post("/person/register",this.buss).then(res => {
+      //         if(res.code === '200') {
+      //           this.$message.success("注册成功")
+      //         } else {
+      //           this.$message.error(res.msg)
+      //         }
+      //       })
+      //     }
+      //   });
+      // }
 
     },
 
@@ -279,8 +279,29 @@ export default {
         axios.get("http://localhost:9090/verify/checkcode?validateCode="+this.user.verifyCode).then(res => {
           if(res.data == "ok"){
             this.user.verifyResult = "ok"
+            this.user.role = this.registerType
+            this.$refs['userForm'].validate((valid) => {
+              if (valid) {  // 表单校验合法
+                if (this.user.password !== this.user.confirmPassword) {
+                  this.$message.error("两次输入的密码不一致")
+                  return false
+                }
+                // if (this.user.verifyResult !== "ok") {
+                //   this.$message.warning("验证码输入错误！")
+                //   return false
+                // }
+                this.request.post("/person/register",this.user).then(res => {
+                  if(res.code === '200') {
+                    this.$message.success("注册成功")
+                  } else {
+                    this.$message.error(res.msg)
+                  }
+                })
+              }
+            });
           }else{
             this.user.verifyResult = "Error"
+            this.$message.warning("验证码输入错误！")
           }
         })
       }
@@ -288,8 +309,29 @@ export default {
         axios.get("http://localhost:9090/verify/checkcode?validateCode="+this.buss.verifyCode).then(res => {
           if(res.data == "ok"){
             this.buss.verifyResult = "ok"
+            this.buss.role = this.registerType
+            this.$refs['bussForm'].validate((valid) => {
+              if (valid) {  // 表单校验合法
+                if (this.buss.password !== this.buss.confirmPassword) {
+                  this.$message.error("两次输入的密码不一致")
+                  return false
+                }
+                // if (this.buss.verifyResult !== "ok") {
+                //   this.$message.warning("验证码输入错误！")
+                //   return false
+                // }
+                this.request.post("/person/register",this.buss).then(res => {
+                  if(res.code === '200') {
+                    this.$message.success("注册成功")
+                  } else {
+                    this.$message.error(res.msg)
+                  }
+                })
+              }
+            });
           }else{
             this.buss.verifyResult = "Error"
+            this.$message.warning("验证码输入错误！")
           }
         })
       }
